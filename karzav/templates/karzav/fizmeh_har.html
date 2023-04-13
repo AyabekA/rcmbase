@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <title>QazJolGZI</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/karzav.css' %}">
+</head>
+
+<body class="body">
+    {% if request.user.role is None %}
+        <script>
+            window.location.href = "{% url 'polls:login_user' %}"
+        </script>
+    {% endif %}
+    <div class="page_header" >
+        <div class="header_logo">
+            <div class="logo">
+                <a href="{% url 'title' %}"><img src="/static/images/logo_qazjol_kz.png" class="logo_png"/></a>
+            </div>
+        </div>
+        <div class="header_menu">
+            <ul class="menu_list" id="menuList">
+                <li class="list_item"><a href="{% url 'mapp' %}" >Карта карьеров</a></li>
+                <li class="list_item selected_link"><a href="{% url 'karzav_list' %}" >Карьеры и заводы</a></li>
+                <li class="list_item"><a href="{% url 'invtech_list' %}" >Реестр инновационных технологий</a></li>
+                <li class="list_item"><a href="{% url 'entapp_form' %}">Отправить заявку на внесение</a></li>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role.id == 3 or request.user.role.id == 4 %}
+                        <li class="list_item"><a href="{% url 'entapp_list' %}">Заявки</a></li>
+                    {% endif %}
+                    <li class="list_item"><a href="{% url 'polls:profile' %}" >Профиль</a></li>
+                {% else %}
+                    <li class="list_item"><a href="{% url 'polls:login_user' %}" >Авторизация</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="logo">
+            <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+                <svg width="50" height="50" viewBox="0 0 100 100">
+                  <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path class="line line2" d="M 20,50 H 80" />
+                  <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="page_content">
+        <div class="content-title">
+        {% for kz in karzavs %}
+            <h2 style="text-align:center;"><b>Показатели физико-механических свойств материала "{{kz.material}}"</b></h2>
+        {% endfor %}
+        </div>
+        <div class="content">
+          <div class="itinfo_image">
+            {% for kz in image_list %}
+              <div class="image_list"><img src="{{ kz }}" class="itimage"></div>
+            {% endfor %}
+          </div>
+          <div class="itinfo_block">
+            <iframe src="{{ pdffile }}" class="itinfo_frame"></iframe>
+          </div>
+        </div>
+    </div>
+
+    <div class="page_footer">
+        <div class="footer-col1">
+            &#169; Все права защищены
+        </div>
+        <div class="footer-col2">
+            <div class="ftitle"> <b>Контакты</b> </div>
+            <div class="fval">г. Астана, ул. Туран 75</div>
+            <div class="fval fphones">
+                <a href="tel:+7 (7172) 72-98-17" style="color:black;">+7 (7172) 72-98-17</a>
+            </div>
+            <div class="fvals">
+                <a href="mailto:kense@qazjolgzi.kz" style="color:black;">kense@qazjolgzi.kz</a>
+            </div>
+        </div>
+        <div class="footer-col3">
+            АО “КаздорНИИ”
+        </div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var menu_list = document.getElementById('menuList');
+    menu_list.style.maxHeight = "0px";
+
+    function togglemenu() {
+        menu_list.style.color = "white";
+        if (menu_list.style.maxHeight == "0px") {
+            menu_list.style.maxHeight = "300px"
+        }
+        else {
+            menu_list.style.maxHeight = "0px"
+        }
+    };
+</script>
+</html>

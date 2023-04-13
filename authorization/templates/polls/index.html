@@ -1,0 +1,294 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QazJolGZI</title>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/karzav.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
+</head>
+
+<body class="body">
+    <div class="page_header">
+        <div class="header_logo">
+            <div class="logo">
+                <a href="{% url 'title' %}"><img src="/static/images/logo_qazjol_kz.png" class="logo_png" alt=""/></a>
+            </div>
+        </div>
+        <div class="header_menu">
+            <ul class="menu_list" id="menuList">
+                <li class="list_item"><a href="{% url 'mapp' %}" >Карта карьеров</a></li>
+                <li class="list_item"><a href="{% url 'karzav_list' %}" >Карьеры и заводы</a></li>
+                <li class="list_item"><a href="{% url 'invtech_list' %}" >Реестр инновационных технологий</a></li>
+                <li class="list_item"><a href="{% url 'entapp_form' %}">Отправить заявку на внесение</a></li>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role.id == 3 or request.user.role.id == 4 %}
+                        <li class="list_item"><a href="{% url 'entapp_list' %}">Заявки</a></li>
+                    {% endif %}
+                    <li class="list_item selected_link"><a href="{% url 'polls:profile' %}" >Профиль</a></li>
+                {% else %}
+                    <li class="list_item"><a href="{% url 'polls:login_user' %}" >Авторизация</a></li>
+                {% endif %}
+{#                <li class="list_item dropdown">#}
+{#                    <a href="#" class="dropdown-toggle">Kz</a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                      <li><a href="#">Kz</a></li>#}
+{#                      <li><a href="#">En</a></li>#}
+{#                      <li><a href="#">Ru</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+            </ul>
+        </div>
+        <div class="logo">
+            <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+                <svg width="50" height="60" viewBox="0 0 100 100">
+                  <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path class="line line2" d="M 20,50 H 80" />
+                  <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="page_content">
+
+        <div class="content">
+            {% if request.user.is_authenticated %}
+            <div class="profile-content">
+                <div class="profile-first">
+                    <div class="profile-avatar">
+                        <div class="profile-avatar-block">
+                            <i class="svg-icon fas fa-user-circle" style="font-size: 20vh"></i>
+                            <div style=""><strong>{{ request.user.first_name }} {{ request.user.last_name }} {{ request.user.patronymic }}</strong></div>
+                            <div>{{ request.user.email }}</div>
+                        </div>
+
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-block">
+                            <table style="margin-bottom: 5vh">
+                                <tr style="border-bottom: 1px solid #494949"><td><strong>Телефон: </strong></td><td>{{ request.user.contacts }}</td></tr>
+                                <tr style="border-bottom: 1px solid #494949"><td><strong>Компания: </strong></td><td>{{ request.user.company }}</td></tr>
+                                <tr style="border-bottom: 1px solid #494949"><td><strong>Роль: </strong></td><td>{{ request.user.role }}</td></tr>
+                            </table>
+                            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                <a href="{% url 'polls:edit_profile' %}" style="color: white; list-style-type: none;"><div class="profile-button">Редактировать</div></a>
+                                <a href="{% url 'polls:logout_user' %}" style="color: white; list-style-type: none;"><div class="profile-button">Выйти</div></a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                {#  СУПЕРАДМИН #}
+                {% if request.user.role.id is 4 %}
+                <div class="profile-second">
+                    <div class="profile-lists">
+                        <div class="profile-superadmin-lists">
+                            <p><strong>Списки</strong></p>
+                            <p><a href="{% url 'polls:list_admin' %}" style="color: #000000" >Админы</a></p>
+                            <p><a href="{% url 'polls:list_projector' %}" style="color: #000000">Проектировщики</a></p>
+                            <p><a href="{% url 'polls:list_provider' %}" style="color: #000000">Поставщики / Производители</a></p>
+                        </div>
+                        <div class="profile-superadmin-delete">
+                            <p><strong>Удаление данных</strong></p>
+                            <p><a href="{% url 'karzav_delete' %}" style="color: #000000" >Удаление Недропользователей</a></p>
+                            <p><a href="{% url 'karzav_material_delete' %}" style="color: #000000">Удаление материала</a></p>
+                            <p><a href="{% url 'invtech_delete' %}" style="color: #000000">Удаление Инновационных технологий</a></p>
+                        </div>
+                    </div>
+                    <div class="profile-superadmin-user">
+                        <a href="{% url 'polls:create_user' %}" style="color: white; list-style-type: none;"><div class="profile-button">Создать аккаунт</div></a>
+                        <a href="{% url 'polls:delete_user' %}" style="color: white; list-style-type: none;"><div class="profile-button">Удалить аккаунт</div></a>
+                    </div>
+                </div>
+                
+                {#  АДМИН #}
+                {% elif request.user.role.id is 3 %}
+                <div class="profile-second">
+                    <div class="profile-other">
+                        <div class="profile-superadmin-lists" style="width:100vw; margin-right:0">
+                            <p><strong>Списки</strong></p>
+                            <p><a href="{% url 'polls:list_projector' %}" style="color: #000000">Проектировщики</a></p>
+                            <p><a href="{% url 'polls:list_provider' %}" style="color: #000000">Поставщики / Производители</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                {#  ПОСТАВЩИК / ПРОИЗВОДИТЕЛЬ #}
+                {% elif request.user.role.id == 2 %}
+                <div class="profile-second">
+                    <div class="profile-other" style="flex-direction: column">
+
+                        <div class="profile-other-block">
+                            <p><strong>Мои публикаций</strong></p>
+                            <div class="profile-requests">
+                            {% for it in invtechs %}
+                            {#% if it.prov_name == request.user.company or it.prod_name == request.user.company %#}
+                                <div class="profile-request">
+                                    <p><strong>Технология:</strong> {{ it.invtech }}</p>
+                                    <p><strong>Область применения:</strong> {{ it.usingarea }}</p>
+                                    <div class="profile-request-buttons">
+                                        <button type="submit" class="profile-request-button" id="itshowbtn" value="{{ it.it_id }}" onclick="it_showClicked(this)" style="color: white; list-style-type: none;">Посмотреть</button>
+                                        <button type="submit" class="profile-request-button" id="iteditbtn" value="{{ it.it_id }}" onclick="it_editClicked(this)" style="color: white; list-style-type: none;">Редактировать</button>
+                                    </div>
+                                </div>
+                            {#% endif %#}
+                            {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="profile-other-block" style="margin-top: 5vh; margin-bottom: 10vh">
+                            <p><strong>Мои заявки</strong></p>
+                            <div class="profile-requests">
+                            {% for t_it in temp_invtechs %}
+                            {#% if t_it.prov_name == request.user.company or t_it.prod_name == request.user.company %#}
+                                <div class="profile-request">
+                                    <p><strong>Технология:</strong> {{ t_it.invtech }}</p>
+                                    <p><strong>Область применения:</strong> {{ t_it.usingarea }}</p>
+                                    {% if t_it.sent_status == "в ожиданий" %}
+                                        <p style="color: #909090"><strong style="color: #333333">Статус заявки:</strong> {{ t_it.sent_status }} <i class='far fa-clock'></i></p>
+                                    {% else %}
+                                        <p style="color: #e03636"><strong style="color: #333333">Статус заявки:</strong> {{ t_it.sent_status }} <i class='far fa-times-circle'></i></p>
+                                    {% endif %}                                    
+                                    <div class="profile-request-buttons">
+                                        <button type="submit" class="profile-request-button" id="titshowbtn" value="{{ t_it.it_id }}" onclick="tit_showClicked(this)" style="color: white; list-style-type: none;">Посмотреть</button>
+                                        <button type="submit" class="profile-request-button" id="titeditbtn" value="{{ t_it.it_id }}" onclick="tit_editClicked(this)" style="color: white; list-style-type: none;">Редактировать</button>
+                                    </div>
+                                </div>
+                            {#% endif %#}
+                            {% endfor %}
+                                    <!--p style="color: #909090"><strong style="color: #333333">Статус заявки:</strong> В ожидании <i class='far fa-clock'></i></p>
+                                    <p style="color: #e03636"><strong style="color: #333333">Статус заявки:</strong> Отклонено <i class='far fa-times-circle'></i></p-->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+                <div class="profile-content">
+                    <div class="profile-other-block">
+                        <div id="result_msg">Вы не авторизованы</div>
+                        <div><a href="{% url 'polls:login_user' %}" style="color: black; list-style-type: none;">Войти</a></div>
+                        <div><a href="{% url 'polls:register' %}" style="color: black; list-style-type: none;">Регистрация</a></div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+       
+       
+    <div class="page_footer">
+        <div class="footer-col1">
+            &#169; Все права защищены
+        </div>
+        <div class="footer-col2">
+            <div class="ftitle"> <b>Контакты</b> </div>
+            <div class="fval">г. Астана, ул. Туран 75</div>
+            <div class="fval fphones">
+                <a href="tel:+7 (7172) 72-98-17" style="color:black;">+7 (7172) 72-98-17</a>
+            </div>
+            <div class="fvals">
+                <a href="mailto:kense@qazjolgzi.kz" style="color:black;">kense@qazjolgzi.kz</a>
+            </div>
+        </div>
+        <div class="footer-col3">
+            АО “КаздорНИИ”
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var menu_list = document.getElementById('menuList');
+    menu_list.style.maxHeight = "0px";
+
+    function togglemenu() {
+        menu_list.style.color = "white";
+        if (menu_list.style.maxHeight == "0px") {
+            menu_list.style.maxHeight = "300px"
+        }
+        else {
+            menu_list.style.maxHeight = "0px"
+        }
+    };
+
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+    const dropdownItems = dropdownMenu.querySelectorAll('li');
+    
+    // set the initial language selection
+    const initialSelection = dropdownItems[0].textContent;
+    dropdownToggle.textContent = initialSelection;
+    
+    // toggle the dropdown menu
+    dropdownToggle.addEventListener('click', function() {
+      dropdownMenu.classList.toggle('show');
+    });
+    
+    // select a new language
+    dropdownItems.forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedLang = item.textContent;
+        dropdownToggle.textContent = selectedLang;
+        dropdownMenu.classList.remove('show');
+      });
+    });
+    
+    
+    function it_showClicked(button) {
+        var ppit_id1 = button.value;//document.getElementById("itshowbtn").value;
+        document.cookie = "ppit_id1=" + ppit_id1;
+        //alert(ppit_id1);
+        var l = "{% url 'polls:mypublication' %}";
+        location.href = l;
+    };
+
+    function it_editClicked(button) {
+        var ppit_id2 = button.value;//document.getElementById("iteditbtn").value;
+        document.cookie = "ppit_id2=" + ppit_id2;
+        function setCookie(cName, cValue, expDays) {
+          let date = new Date();
+          date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));
+          const expires = "expires=" + date.toUTCString();
+          document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
+        }
+        setCookie('ppit_id2', ppit_id2);
+        setCookie('pptit_id2', -1);
+        //alert('it_editClicked --- ' + ppit_id2);
+        var l = "{% url 'entapp_edit' %}";
+        location.href = l;
+    };
+
+    
+    function tit_showClicked(button) {
+        var pptit_id1 = button.value;//document.getElementById("titshowbtn").value;
+        document.cookie = "pptit_id1=" + pptit_id1;
+        //alert(pptit_id1);
+        var l = "{% url 'polls:myapplication' %}";
+        location.href = l;
+    };
+
+    
+    function tit_editClicked(button) {
+        var pptit_id2 = button.value;//document.getElementById("titeditbtn").value;
+        document.cookie = "pptit_id2=" + pptit_id2;
+        function setCookie(cName, cValue, expDays) {
+          let date = new Date();
+          date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));
+          const expires = "expires=" + date.toUTCString();
+          document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
+        }
+        setCookie('pptit_id2', pptit_id2);
+        setCookie('ppit_id2', -1);
+        //alert('tit_editClicked --- ' + pptit_id2);
+        var l = "{% url 'entapp_edit' %}";
+        location.href = l;
+    };
+</script>

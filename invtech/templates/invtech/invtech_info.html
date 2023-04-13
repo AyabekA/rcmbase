@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>QazJolGZI</title>
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/karzav.css' %}">
+</head>
+
+<body class="body">
+  {% if request.user.role is None %}
+    <script>
+        window.location.href = "{% url 'polls:login_user' %}"
+    </script>
+  {% endif %}
+
+    <div class="page_header">
+      <div class="header_logo">
+          <div class="logo">
+              <a href="{% url 'title' %}"><img src="/static/images/logo_qazjol_kz.png" class="logo_png"/></a>
+          </div>
+      </div>
+      <div class="header_menu">
+          <ul class="menu_list" id="menuList">
+              <li class="list_item"><a href="{% url 'mapp' %}">Карта карьеров</a></li>
+              <li class="list_item"><a href="{% url 'karzav_list' %}">Карьеры и заводы</a></li>
+              <li class="list_item selected_link"><a href="{% url 'invtech_list' %}" >Реестр инновационных технологий</a></li>
+              <li class="list_item"><a href="{% url 'entapp_form' %}">Отправить заявку на внесение</a></li>
+              {% if request.user.is_authenticated %}
+                  {% if request.user.role.id == 3 or request.user.role.id == 4 %}
+                      <li class="list_item"><a href="{% url 'entapp_list' %}">Заявки</a></li>
+                  {% endif %}
+                  <li class="list_item"><a href="{% url 'polls:profile' %}">Профиль</a></li>
+              {% else %}
+                  <li class="list_item"><a href="{% url 'polls:login_user' %}">Войти</a></li>
+              {% endif %}
+              <!--
+              <li class="list_item dropdown">
+                  <a href="#" class="dropdown-toggle" >Kz</a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Kz</a></li>
+                    <li><a href="#">En</a></li>
+                    <li><a href="#">Ru</a></li>
+                  </ul>
+              </li>-->
+          </ul>
+      </div>
+      <div class="logo">
+          <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+              <svg width="50" height="60" viewBox="0 0 100 60">
+                <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                <path class="line line2" d="M 20,50 H 80" />
+                <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+              </svg>
+          </button>
+      </div>
+    </div>
+
+    <div class="page_content">
+        <div class="content-title">
+            {% for it in invtechs %}
+                <h2 style="text-align:center;"><b>{{it.invtech}}</b></h2>
+            {% endfor %}
+        </div>
+        <div class="content">
+          <div class="itinfo_image">
+              {% for it in image_list %}
+                <div class="image_list"><img src="{{ it }}" class="itimage"></div>
+              {% endfor %}
+          </div>
+          <div class="itinfo_block">
+                <div class="card">
+                    {% for it in invtechs %}
+                    <div class="card-footer">
+                      <div class="progress1">
+                        {% if it.status == 'апробирован' %}
+                        <div style="width: 15px; height: 15px; border-radius: 15px; background-color: #99db9c"></div>
+                        {% else %}
+                        <div style="width: 15%; height: 15px; border-radius: 15px; background-color: #e03636"></div>
+                        {% endif %}
+                      </div>
+
+                      <div class="status">
+                        <span>{{it.status}}</span>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="card-text">
+                        <div class="row">
+                            <table class="table-content">
+
+                            <div style="padding-left: 15px;">
+                            <p>Область применения: {{ it.usingarea }}</p>
+                            <p>Поставщик: {{ it.prov_name }}</p>
+                            <p>Производитель: {{ it.prod_name }}</p>
+                            {% if it.otchet_kazdornii is not None %}
+                                <p>Отчет КАЗДОРНИИ: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.otchet_kazdornii }}' target="_blank">{{ it.otchet_kazdornii }}</a></p>
+                            {% endif %}
+                            {% if it.passport_safety is not None %}
+                                <p>Паспорт безопастности: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.passport_safety }}' target="_blank">{{ it.passport_safety }}</a></p>
+                            {% endif %}
+                            {% if it.rrk is not None %}
+                                <p>Рекомендации РК: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.rrk }}' target="_blank">{{ it.rrk }}</a></p>
+                            {% endif %}
+                            {% if it.conclusion_kazdornii is not None %}
+                                <p>Заключение КаздорНИИ: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.conclusion_kazdornii }}' target="_blank">{{ it.conclusion_kazdornii }}</a></p>
+                            {% endif %}
+                            {% if it.certification_reference is not None %}
+                                <p>Справка о сертификации: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.certification_reference }}' target="_blank">{{ it.certification_reference }}</a></p>
+                            {% endif %}
+                            {% if it.quality_certificate is not None %}
+                                <p>Сертификат качества: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.quality_certificate }}' target="_blank">{{ it.quality_certificate }}</a></p>
+                            {% endif %}
+                            {% if it.conformity_certificate is not None %}
+                                <p>Сертификат соответствия: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.conformity_certificate }}' target="_blank">{{ it.conformity_certificate }}</a></p>
+                            {% endif %}
+                            {% if it.lab_conclusion is not None %}
+                                <p>Заключение лаборатории: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.lab_conclusion }}' target="_blank">{{ it.lab_conclusion }}</a></p>
+                            {% endif %}
+                            {% if it.ses_expert_conclusion is not None %}
+                                <p>Экспертное Заключение CЭС: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.ses_expert_conclusion }}' target="_blank">{{ it.ses_expert_conclusion }}</a></p>
+                            {% endif %}
+                            {% if it.state_registration_certificate is not None %}
+                                <p>Справка о государственной регистрации: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.state_registration_certificate }}' target="_blank">{{ it.state_registration_certificate }}</a></p>
+                            {% endif %}
+                            {% if it.akt is not None %}
+                                <p>АКТ: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.akt }}' target="_blank">{{ it.akt }}</a></p>
+                            {% endif %}
+                            {% if it.addition is not None %}
+                                <p>АКТ: <a href='/static/files/invtech_files/{{ it.invtech }}/{{ it.addition }}' target="_blank">{{ it.addition }}</a></p>
+                            {% endif %}
+                            </div>
+                            </table>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </table>
+            <iframe src="{{ pdffile }}" class="itinfo_frame" ></iframe>
+          </div>
+        </div>
+    </div>
+
+    <div class="page_footer">
+      <div class="footer-col1">
+            &#169; Все права защищены
+      </div>
+      <div class="footer-col2">
+          <div class="ftitle"> <b>Контакты</b> </div>
+          <div class="fval">г. Астана, ул. Туран 75</div>
+          <div class="fval fphones">
+              <a href="tel:+7 (7172) 72-98-17" style="color:black;">+7 (7172) 72-98-17</a>
+          </div>
+          <div class="fvals">
+              <a href="mailto:kense@qazjolgzi.kz" style="color:black;">kense@qazjolgzi.kz</a>
+          </div>
+      </div>
+      <div class="footer-col3">
+          АО “КаздорНИИ”
+      </div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var menu_list = document.getElementById('menuList');
+    menu_list.style.maxHeight = "0px";
+
+    function togglemenu() {
+        menu_list.style.color = "white";
+        if (menu_list.style.maxHeight == "0px") {
+            menu_list.style.maxHeight = "300px"
+        }
+        else {
+            menu_list.style.maxHeight = "0px"
+        }
+    };
+
+    
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+    const dropdownItems = dropdownMenu.querySelectorAll('li');
+    
+    // set the initial language selection
+    const initialSelection = dropdownItems[0].textContent;
+    dropdownToggle.textContent = initialSelection;
+    
+    // toggle the dropdown menu
+    dropdownToggle.addEventListener('click', function() {
+      dropdownMenu.classList.toggle('show');
+    });
+    
+    // select a new language
+    dropdownItems.forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedLang = item.textContent;
+        dropdownToggle.textContent = selectedLang;
+        dropdownMenu.classList.remove('show');
+      });
+    });
+
+</script>
+</html>

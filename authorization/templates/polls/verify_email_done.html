@@ -1,0 +1,30 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/authorization.css' %}">
+    <title>Регистрация</title>
+</head>
+<body>
+
+<div class="body-auth">
+    <div class="content-auth-text fadeInDown">
+        <div class="h-auth fadeIn first">
+            <h2 class="active"> Верификация </h2>
+                <div class="h-auth-line">
+                    <div class="" style="background-color: #424B5A; border-radius: 60px; height: 5px; width: 35px"></div>
+                    <div style="background-color: #424B5A; border-radius: 60px; height: 5px; width: 15px; margin-left: 5px"></div>
+                </div>
+        </div>
+        <div class="input-auth-line-text fadeIn third">
+            <p>Верификация вашего электронного адреса прошла успешно!</p>
+            <p>Вы можете теперь зайти на наш сайт</p>
+            <p><a class="a-reg-auth" href="{% url 'polls:login_user' %}">Войти в мой кабинет</a></p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

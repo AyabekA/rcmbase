@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <title>QazJolGZI</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'css/karzav.css' %}">
+  
+</head>
+
+<body class="body">
+   
+    <div class="page_header">
+        <div class="header_logo">
+            <div class="logo">
+                <a href="{% url 'title' %}"><img src="/static/images/logo_qazjol_kz.png" class="logo_png"/></a>
+            </div>
+        </div>
+        <div class="header_menu">
+            <ul class="menu_list" id="menuList">
+                <li class="list_item"><a href="{% url 'mapp' %}" >Карта карьеров</a></li>
+                <li class="list_item"><a href="{% url 'karzav_list' %}" >Карьеры и заводы</a></li>
+                <li class="list_item"><a href="{% url 'invtech_list' %}" >Реестр инновационных технологий</a></li>
+                <li class="list_item selected_link"><a href="{% url 'entapp_form' %}" >Отправить заявку на внесение</a></li>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role.id == 3 or request.user.role.id == 4 %}
+                        <li class="list_item"><a href="{% url 'entapp_list' %}">Заявки</a></li>
+                    {% endif %}
+                    <li class="list_item"><a href="{% url 'polls:profile' %}">Профиль</a></li>
+                {% else %}
+                    <li class="list_item"><a href="{% url 'polls:login_user' %}">Войти</a></li>
+                {% endif %}
+{#                <li class="list_item dropdown">#}
+{#                    <a href="#" class="dropdown-toggle">Kz</a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                      <li><a href="#">Kz</a></li>#}
+{#                      <li><a href="#">En</a></li>#}
+{#                      <li><a href="#">Ru</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+            </ul>
+        </div>
+        <div class="logo">
+            <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+                <svg width="50" height="60" viewBox="0 0 100 60">
+                  <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path class="line line2" d="M 20,50 H 80" />
+                  <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="page_content" style="flex-direction: row">
+        {% for message in messages %}
+        <div class="container-fluid p-0">
+          <div class="alert {{ message.tags }} alert-dismissible" role="alert" id="message_box">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true" onclick="buttonclose()">&times;</span>
+            </button>
+            {{ message }}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="entapp-space">
+            <div class="entapp-buttons">
+                <div class="button-div button-div-image-one" onclick="showForm(1)">
+                    Отправить заявку на внесение в реестр инновационных технологий
+                </div>
+                <div class="button-div button-div-image-two" onclick="showForm(2)">
+                    Отправить заявку на внесение в базу карьеров и заводов
+                </div>
+            </div>
+        </div>
+
+        <div id="form1" class="form-div">
+        <form method="POST" enctype="multipart/form-data" class="entapp-form">
+            {% csrf_token %}
+            <input type="text" class="inputbox" id="lname" name="lname" value="{{request.user.last_name}}" placeholder="Ваше фамилия" required>
+
+            <input type="text" class="inputbox" id="fname" name="fname" value="{{request.user.first_name}}" placeholder="Ваше имя" required>
+
+            <input type="text" class="inputbox" id="dname" name="dname" value="{{request.user.patronymic}}" placeholder="Ваше отчество" required>
+
+            <input type="email" class="inputbox" id="email" name="email" value="{{request.user.email}}" autocomplete="off" placeholder="Ваш email" required>
+
+            <input type="tel" class="inputbox" id="phone" name="phone" value="{{request.user.contacts}}" pattern="^\+7(\s+)?\(?7[0-9]{2}\)?(\s+)?[0-9]{3}-?[0-9]{2}-?[0-9]{2}$" required>
+
+            <input type="text" class="inputbox" id="prov_name" name="prov_name" placeholder="Название поставщика" required>
+
+            <input type="text" class="inputbox" id="prod_name" name="prod_name" placeholder="Название производителя" required>
+
+            <input type="text" class="inputbox" id="invtech" name="invtech" placeholder="Название технологии" required>
+
+            <input type="text" class="inputbox" id="usingarea" name="usingarea" placeholder="Название применения области" required>
+
+            <input type="text" class="inputbox" id="status" name="status" placeholder="Статус технологии" required>
+
+            <label for="full_hars" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i> Физико-механические характеристики
+            </label>
+            <input style="display: none;" multiple="multiple" id="full_hars" name="full_hars" required class="file-upload" type="file"/>
+
+            <label for="images" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Изображение технологии
+            </label>
+            <input style="display: none;" multiple="multiple" id="images" name="images" class="file-upload" type="file"/>
+
+            <label for="otchet_kazdornii" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Отчет КАЗДОРНИИ
+            </label>
+            <input style="display: none;" multiple="multiple" id="otchet_kazdornii" name="otchet_kazdornii" class="file-upload" type="file"/>
+
+            <label for="passport_safety" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Паспорт безопасности
+            </label>
+            <input style="display: none;" multiple="multiple" id="passport_safety" name="passport_safety" class="file-upload" type="file"/>
+
+            <label for="rrk" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Рекомендации РК
+            </label>
+            <input style="display: none;" multiple="multiple" id="rrk" name="rrk" class="file-upload" type="file"/>
+
+            <label for="conclusion_kazdornii" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Заключение КаздорНИИ
+            </label>
+            <input style="display: none;" multiple="multiple" id="conclusion_kazdornii" name="conclusion_kazdornii" class="file-upload" type="file"/>
+
+            <label for="certification_reference" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Справка о сертификации
+            </label>
+            <input style="display: none;" multiple="multiple" id="certification_reference" name="certification_reference" class="file-upload" type="file"/>
+
+            <label for="quality_certificate" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Сертификат качества
+            </label>
+            <input style="display: none;" multiple="multiple" id="quality_certificate" name="quality_certificate" class="file-upload" type="file"/>
+
+            <label for="conformity_certificate" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Сертификат соответствия
+            </label>
+            <input style="display: none;" multiple="multiple" id="conformity_certificate" name="conformity_certificate" class="file-upload" type="file"/>
+
+            <label for="lab_conclusion" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Заключение лаборатории
+            </label>
+            <input style="display: none;" multiple="multiple" id="lab_conclusion" name="lab_conclusion" class="file-upload" type="file"/>
+
+            <label for="ses_expert_conclusion" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Экспертное Заключение CЭС
+            </label>
+            <input style="display: none;" multiple="multiple" id="ses_expert_conclusion" name="ses_expert_conclusion" class="file-upload" type="file"/>
+
+            <label for="state_registration_certificate" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Справка о государственной регистрации
+            </label>
+            <input style="display: none;" multiple="multiple" id="state_registration_certificate" name="state_registration_certificate" class="file-upload" type="file"/>
+
+            <label for="akt" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                АКТ
+            </label>
+            <input style="display: none;" multiple="multiple" id="akt" name="akt" class="file-upload" type="file"/>
+
+            <label for="addition" class="custom-file-upload">
+                <i class="fas fa-file-upload"></i>
+                Дополнительные материалы
+            </label>
+            <input style="display: none;" multiple="multiple" id="addition" name="addition" class="file-upload" type="file"/>
+
+            <div class="btnianchor">
+                <input type="submit" value="Отправить" class="profile-button" style="border: none;color: white; margin-right: 0;margin-left: 0;">
+                {% if not request.user.is_authenticated %}
+                    <a href="{% url 'polls:login_user' %}" style="color: #4c9bad; font-size: 16px;">Войти в мой кабинет</a>
+                {% endif %}
+            </div>
+        </form>
+        </div>
+
+        <div id="form2" class="form-div">
+            <form class="entapp-form">
+                <label for="name2">Name2:</label>
+                <input type="text" id="name2" name="name2">
+
+                <label for="email2">Email2:</label>
+                <input type="text" id="email2" name="email2">
+
+                <input type="submit" value="Submit">
+                <button class="cancel-button" type="button" onclick="hideForm(2)">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="page_footer">
+        <div class="footer-col1">
+            &#169; Все права защищены
+        </div>
+        <div class="footer-col2">
+            <div class="ftitle"> <b>Контакты</b> </div>
+            <div class="fval">г. Астана, ул. Туран 75</div>
+            <div class="fval fphones">
+                <a href="tel:+7 (7172) 72-98-17" style="color:black;">+7 (7172) 72-98-17</a>
+            </div>
+            <div class="fvals">
+                <a href="mailto:kense@qazjolgzi.kz" style="color:black;">kense@qazjolgzi.kz</a>
+            </div>
+        </div>
+        <div class="footer-col3">
+            АО “КаздорНИИ”
+        </div>
+    </div>
+</body>
+<script>
+    function showForm(formNumber) {
+        // Hide all form divs
+        var formDivs = document.getElementsByClassName("form-div");
+        const buttonsDiv = document.getElementsByClassName("button-div");
+        for (var i = 0; i < formDivs.length; i++) {
+            formDivs[i].classList.remove("show");
+            buttonsDiv[i].classList.remove("focus");
+        }
+  	// Show the selected form div
+    	var formDiv = document.getElementById("form" + formNumber);
+        const entappSpace = document.getElementsByClassName("entapp-space")[0];
+        const containerDiv = document.getElementsByClassName("entapp-buttons")[0];
+        entappSpace.classList.add("show");
+        containerDiv.classList.add("show");
+        buttonsDiv[0].classList.add("show");
+        buttonsDiv[1].classList.add("show");
+        buttonsDiv[1].style.marginTop = "3vh";
+
+        buttonsDiv[formNumber - 1].classList.add("focus");
+        formDiv.classList.add("show");
+    }
+
+    var message_tag = document.getElementById("message_box");
+    setTimeout(function(){ 
+       message_tag.style.display = "none"; 
+    }, 2000);
+    function buttonclose(){ 
+       message_tag.style.display = "none"; 
+    }; 
+</script>
+<!--
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+-->
+<script>
+    const fileInputs = document.querySelectorAll('.file-upload');
+
+    fileInputs.forEach(fileInput => {
+      const label = fileInput.previousElementSibling;
+      const labelText = label.innerHTML;
+
+      fileInput.addEventListener('change', e => {
+        let fileName = '';
+        if (fileInput.files && fileInput.files.length > 0) {
+          fileName = fileInput.files[0].name;
+        }
+        if (fileName !== '') {
+            label.innerHTML = 'Выбран файл: ' + fileName;
+            label.style.color = 'black';
+            label.style.border = '2px solid #46717a';
+        }
+        else {
+            label.innerHTML = labelText;
+            label.style.color = '#757575';
+            label.style.border = '1px solid #4c9bad';
+        }
+      });
+    });
+
+    var menu_list = document.getElementById('menuList');
+    menu_list.style.maxHeight = "0px";
+
+    function togglemenu() {
+        menu_list.style.color = "white";
+        if (menu_list.style.maxHeight == "0px") {
+            menu_list.style.maxHeight = "300px"
+        }
+        else {
+            menu_list.style.maxHeight = "0px"
+        }
+    };
+
+    window.onload = function() {
+        MaskedInput({
+           elm: document.getElementById('phone'),
+           format: '+7 (7__) ___-__-__',
+           separator: '+7 (7)--'
+        });
+     };
+
+    // masked_input_1.4-min.js
+    // angelwatt.com/coding/masked_input.php
+    (function(a){a.MaskedInput=function(f){if(!f||!f.elm||!f.format){return null}if(!(this instanceof a.MaskedInput)){return new a.MaskedInput(f)}var o=this,d=f.elm,s=f.format,i=f.allowed||"0123456789",h=f.allowedfx||function(){return true},p=f.separator||"/:-",n=f.typeon||"_YMDhms",c=f.onbadkey||function(){},q=f.onfilled||function(){},w=f.badkeywait||0,A=f.hasOwnProperty("preserve")?!!f.preserve:true,l=true,y=false,t=s,j=(function(){if(window.addEventListener){return function(E,C,D,B){E.addEventListener(C,D,(B===undefined)?false:B)}}if(window.attachEvent){return function(D,B,C){D.attachEvent("on"+B,C)}}return function(D,B,C){D["on"+B]=C}}()),u=function(){for(var B=d.value.length-1;B>=0;B--){for(var D=0,C=n.length;D<C;D++){if(d.value[B]===n[D]){return false}}}return true},x=function(C){try{C.focus();if(C.selectionStart>=0){return C.selectionStart}if(document.selection){var B=document.selection.createRange();return -B.moveStart("character",-C.value.length)}return -1}catch(D){return -1}},b=function(C,E){try{if(C.selectionStart){C.focus();C.setSelectionRange(E,E)}else{if(C.createTextRange){var B=C.createTextRange();B.move("character",E);B.select()}}}catch(D){return false}return true},m=function(D){D=D||window.event;var C="",E=D.which,B=D.type;if(E===undefined||E===null){E=D.keyCode}if(E===undefined||E===null){return""}switch(E){case 8:C="bksp";break;case 46:C=(B==="keydown")?"del":".";break;case 16:C="shift";break;case 0:case 9:case 13:C="etc";break;case 37:case 38:case 39:case 40:C=(!D.shiftKey&&(D.charCode!==39&&D.charCode!==undefined))?"etc":String.fromCharCode(E);break;default:C=String.fromCharCode(E);break}return C},v=function(B,C){if(B.preventDefault){B.preventDefault()}B.returnValue=C||false},k=function(B){var D=x(d),F=d.value,E="",C=true;switch(C){case (i.indexOf(B)!==-1):D=D+1;if(D>s.length){return false}while(p.indexOf(F.charAt(D-1))!==-1&&D<=s.length){D=D+1}if(!h(B,D)){c(B);return false}E=F.substr(0,D-1)+B+F.substr(D);if(i.indexOf(F.charAt(D))===-1&&n.indexOf(F.charAt(D))===-1){D=D+1}break;case (B==="bksp"):D=D-1;if(D<0){return false}while(i.indexOf(F.charAt(D))===-1&&n.indexOf(F.charAt(D))===-1&&D>1){D=D-1}E=F.substr(0,D)+s.substr(D,1)+F.substr(D+1);break;case (B==="del"):if(D>=F.length){return false}while(p.indexOf(F.charAt(D))!==-1&&F.charAt(D)!==""){D=D+1}E=F.substr(0,D)+s.substr(D,1)+F.substr(D+1);D=D+1;break;case (B==="etc"):return true;default:return false}d.value="";d.value=E;b(d,D);return false},g=function(B){if(i.indexOf(B)===-1&&B!=="bksp"&&B!=="del"&&B!=="etc"){var C=x(d);y=true;c(B);setTimeout(function(){y=false;b(d,C)},w);return false}return true},z=function(C){if(!l){return true}C=C||event;if(y){v(C);return false}var B=m(C);if((C.metaKey||C.ctrlKey)&&(B==="X"||B==="V")){v(C);return false}if(C.metaKey||C.ctrlKey){return true}if(d.value===""){d.value=s;b(d,0)}if(B==="bksp"||B==="del"){k(B);v(C);return false}return true},e=function(C){if(!l){return true}C=C||event;if(y){v(C);return false}var B=m(C);if(B==="etc"||C.metaKey||C.ctrlKey||C.altKey){return true}if(B!=="bksp"&&B!=="del"&&B!=="shift"){if(!g(B)){v(C);return false}if(k(B)){if(u()){q()}v(C,true);return true}if(u()){q()}v(C);return false}return false},r=function(){if(!d.tagName||(d.tagName.toUpperCase()!=="INPUT"&&d.tagName.toUpperCase()!=="TEXTAREA")){return null}if(!A||d.value===""){d.value=s}j(d,"keydown",function(B){z(B)});j(d,"keypress",function(B){e(B)});j(d,"focus",function(){t=d.value});j(d,"blur",function(){if(d.value!==t&&d.onchange){d.onchange()}});return o};o.resetField=function(){d.value=s};o.setAllowed=function(B){i=B;o.resetField()};o.setFormat=function(B){s=B;o.resetField()};o.setSeparator=function(B){p=B;o.resetField()};o.setTypeon=function(B){n=B;o.resetField()};o.setEnabled=function(B){l=B};return r()}}(window));
+</script>
+</html>

@@ -1,0 +1,508 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/karzav.css' %}">
+</head>
+
+<body class="body">
+
+    {% if request.user.role.id != 3 and request.user.role.id != 4 %}
+      <script>
+          window.location.href = "{% url 'polls:login_user' %}"
+      </script>
+    {% endif %}
+
+    <div class="page_header">
+        <div class="header_logo">
+            <div class="logo">
+                <a href="{% url 'title' %}"><img src="/static/images/logo_qazjol_kz.png" class="logo_png" alt=""/></a>
+            </div>
+        </div>
+        <div class="header_menu">
+            <ul class="menu_list" id="menuList">
+                <li class="list_item"><a href="{% url 'mapp' %}" >Карта карьеров</a></li>
+                <li class="list_item"><a href="{% url 'karzav_list' %}" >Карьеры и заводы</a></li>
+                <li class="list_item"><a href="{% url 'invtech_list' %}" >Реестр инновационных технологий</a></li>
+                <li class="list_item"><a href="{% url 'entapp_form' %}">Отправить заявку на внесение</a></li>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role.id == 3 or request.user.role.id == 4 %}
+                        <li class="list_item selected_link"><a href="{% url 'entapp_list' %}">Заявки</a></li>
+                    {% endif %}
+                    <li class="list_item"><a href="{% url 'polls:profile' %}">Профиль</a></li>
+                {% else %}
+                    <li class="list_item"><a href="{% url 'polls:login_user' %}">Войти</a></li>
+                {% endif %}
+{#                <li class="list_item dropdown">#}
+{#                    <a href="#" class="dropdown-toggle">Kz</a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                      <li><a href="#">Kz</a></li>#}
+{#                      <li><a href="#">En</a></li>#}
+{#                      <li><a href="#">Ru</a></li>#}
+{#                    </ul>#}
+{#                </li>#}
+            </ul>
+        </div>
+        <div class="logo">
+            <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+                <svg width="50" height="60" viewBox="0 0 100 60">
+                  <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path class="line line2" d="M 20,50 H 80" />
+                  <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="page_content">
+        <div class="content-title">
+            <h2 style="text-transform: uppercase; text-align: center"><b>Заявки</b></h2>
+        </div>
+
+        <div class="content">
+            <div class="filters" style="padding-top: 0">
+                <div class="entapp-list-space">
+                    <div class="entapp-list-buttons">
+                        <div class="list-button-div" onclick="showForm(1)">
+                            Заявки на внесение в реестр инновационных технологий
+                        </div>
+                        <div class="list-button-div" onclick="showForm(2)">
+                            Заявки на внесение в базу карьеров и заводов
+                        </div>
+                    </div>
+                </div>
+
+                {#  Invtech  #}
+                <div class="entapp-list-filters1">
+                    <div class="search_form" style="margin-top: 3vh">
+                        <form id="search_form" class="form_for_search">
+                            <input type="text" id="search_inp" class="search_inp" name="q" placeholder="Поиск...">
+                            <button type="submit" class="search_btn"><i class="fa fa-search"></i></button>
+                        </form>
+                        <button id="dropdown" onclick="togglefilter()" class="dropdown_btn"><i id="dropdown_icon" class="fa"></i></button>
+                    </div>
+
+                    <div class="filter-collection" id="filter-collection">
+                        <div class="filter">
+                            <select class="selects" id="sent_status" url = "{% url 'get_sent_status' %}"/></select>
+                        </div>
+
+                        <div class="filter">
+                            <select class="selects" id="entapp_status" url = "{% url 'get_entapp_status' %}"/></select>
+                        </div>
+
+                        <div class="filter">
+                            <select class="selects" id="sort_by">
+                                <option selected="true" disabled="disabled" value = "none">Сортировка</option>
+                                <option value='by_sent_status'>по статусу просмотра заявки</option>
+                                <option value='by_entapp_status'>по статусу заявки</option>
+                            </select>
+                        </div>
+
+                        <div class="filter">
+                            <button class="selects" id="display_all">Показать все</button>
+                        </div>
+                    </div>
+                </div>
+
+                {#  Karzav  #}
+                <div class="entapp-list-filters2">
+                    <div class="search_form" style="margin-top: 3vh">
+                        <form id="search_form" class="form_for_search">
+                            <input type="text" id="search_inp" class="search_inp" name="q" placeholder="Поиск...">
+                            <button type="submit" class="search_btn"><i class="fa fa-search"></i></button>
+                        </form>
+                        <button id="dropdown" onclick="togglefilter()" class="dropdown_btn"><i id="dropdown_icon" class="fa"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            {#  Invtech  #}
+            <div class="list-form-div" id="form1">
+                <div id="fltr0" class="boxes" style="display: block; padding-right: 3vw; width: 100%; transition: all 0.5s ease-in-out;">
+                    <div id = "no_results">
+                        <h5>Результаты не найдены</h5>
+                    </div>
+                    <table id="ealist_data" url = "{% url 'ealisting' %}" class="user-table">
+                        <thead class="user-table-thead">
+                            <tr class="user-table-thead-tr">
+                                <th>Пользователь</th>
+                                <th>Технология</th>
+                                <th>Статус заявки</th>
+                                <th>Статус просмотра заявки</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ealisting" class="user-table-tbody"></tbody>
+                    </table>
+
+                    <div class="paginate">
+                        <nav aria-label="navigation">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <button class="btn btn-primary-my page-link" id="previous"><<</button>
+                                </li>
+                                <li class="page-item pull-right">
+                                    <button class="btn btn-primary-my page-link" id="next">>></button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            {#  Karzav  #}
+            <div class="list-form-div" id="form2">
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="page_footer">
+        <div class="footer-col1">
+            &#169; Все права защищены
+        </div>
+        <div class="footer-col2">
+            <div class="ftitle"> <b>Контакты</b> </div>
+            <div class="fval">г. Астана, ул. Туран 75</div>
+            <div class="fval fphones">
+                <a href="tel:+7 (7172) 72-98-17" style="color:black;">+7 (7172) 72-98-17</a>
+            </div>
+            <div class="fvals">
+                <a href="mailto:kense@qazjolgzi.kz" style="color:black;">kense@qazjolgzi.kz</a>
+            </div>
+        </div>
+        <div class="footer-col3">
+            АО “КаздорНИИ”
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function showForm(formNumber) {
+        // Hide all form divs
+        var formDivs = document.getElementsByClassName("list-form-div");
+        const buttonsDiv = document.getElementsByClassName("list-button-div");
+        var formDiv = document.getElementById("form" + formNumber);
+        const entappSpace = document.getElementsByClassName("entapp-list-space")[0];
+        const containerDiv = document.getElementsByClassName("entapp-list-buttons")[0];
+        const filtersDiv1 = document.getElementsByClassName("entapp-list-filters1")[0];
+        const filtersDiv2 = document.getElementsByClassName("entapp-list-filters2")[0];
+        entappSpace.classList.add("show");
+        containerDiv.classList.add("show");
+        buttonsDiv[0].classList.add("visible");
+        buttonsDiv[1].classList.add("visible");
+        filtersDiv1.classList.remove("show");
+        filtersDiv2.classList.remove("show");
+        for (var i = 0; i < formDivs.length; i++) {
+            formDivs[i].classList.remove("show");
+            buttonsDiv[i].style.display = "none";
+        }
+        document.getElementsByClassName("entapp-list-filters" + formNumber)[0].classList.add("show");
+        if (formNumber === 1) {
+            buttonsDiv[1].style.display = "flex";
+        }
+        else {
+            buttonsDiv[0].style.display = "flex";
+        }
+        formDiv.classList.add("show");
+    }
+
+    var menu_list = document.getElementById('menuList');
+    menu_list.style.maxHeight = "0px";
+
+    function togglemenu() {
+        menu_list.style.color = "white";
+        if (menu_list.style.maxHeight == "0px") {
+            menu_list.style.maxHeight = "300px"
+        }
+        else {
+            menu_list.style.maxHeight = "0px"
+        }
+    };
+    {##}
+    {#const dropdownToggle = document.querySelector('.dropdown-toggle');#}
+    {#const dropdownMenu = document.querySelector('.dropdown-menu');#}
+    {#const dropdownItems = dropdownMenu.querySelectorAll('li');#}
+    {##}
+    {#// set the initial language selection#}
+    {#const initialSelection = dropdownItems[0].textContent;#}
+    {#dropdownToggle.textContent = initialSelection;#}
+    {##}
+    {#// toggle the dropdown menu#}
+    {#dropdownToggle.addEventListener('click', function() {#}
+    {#  dropdownMenu.classList.toggle('show');#}
+    {# });#}
+
+    {#// select a new language#}
+    {#dropdownItems.forEach(function(item) {#}
+    {#  item.addEventListener('click', function(e) {#}
+    {#    e.preventDefault();#}
+    {#    const selectedLang = item.textContent;#}
+    {#    dropdownToggle.textContent = selectedLang;#}
+    {#    dropdownMenu.classList.remove('show');#}
+    {#  });#}
+    {# });#}
+    
+
+
+    // переменная, которая хранит всю информацию о фильтре
+    var send_data = {}
+        
+    $(document).ready(function () {
+        // сбросить все параметры при загрузке страницы
+        resetFilters();
+
+        // привести все данные без всяких фильтров
+        getAPIData();
+        
+        getSentStatus();
+        getEntappStatus();
+
+
+        $('#sent_status').on('change', function () {
+            if(this.value == "all")
+                send_data['sent_status'] = "";
+            else
+                send_data['sent_status'] = this.value;
+
+            getAPIData();
+        });
+
+        $('#entapp_status').on('change', function () {
+            if(this.value == "all")
+                send_data['entapp_status'] = "";
+            else
+                send_data['entapp_status'] = this.value;
+
+            getAPIData();
+        });
+
+        $('#sort_by').on('change', function () {
+            send_data['sort_by'] = this.value;
+            getAPIData();
+        });
+
+        // отображать результаты после сброса фильтров
+        $("#display_all").click(function(){
+            resetFilters();
+            getAPIData();
+        })
+
+        $("#search_form").submit(function(e) {
+            e.preventDefault();
+            send_data['search'] = $("#search_inp").val();
+            getAPIData();
+        });
+    })
+
+
+    /* Функция, которая сбрасывает все фильтры */
+    function resetFilters() {
+        $("#sent_status").val("all");
+        $("#entapp_status").val("all");
+        $("#sort_by").val("none");
+        $("#search_inp").val("");
+        
+        send_data['sent_status'] = '';
+        send_data['entapp_status'] = '';
+        send_data["sort_by"] = '',
+        send_data["search"] = '',
+        send_data['format'] = 'json';
+    }
+
+
+    /* Вспомогательная функция для демонстрации данных API, которые мы получили от серверной части, в содержимое таблицы. */
+    function putTableData(result) {
+        // создание строки таблицы для каждого результата и нажатие на html-содержимое тела таблицы таблицы списка
+        let row;
+        if(result["results"].length > 0){
+            $("#no_results").hide();
+            $("#ealist_data").show();
+            $("#ealisting").html("");
+            $.each(result["results"], function (a, b) {
+                if (b.sent_status == "отклонено") {
+                    iconForStatus = "<i class='far fa-times-circle'></i>"
+                    colorForStatus = '#e03636'
+                } else {
+                    iconForStatus = "<i class='far fa-clock'></i>"
+                    colorForStatus = '#909090'
+                }
+                
+                row = "<tr class='user-table-tbody-tr'><td><div><div><strong>" + b.fname + " " + b.lname + "</strong></div>" + b.email +
+                    "</div></td><td><div style='display: flex;'>" + b.invtech + "</div></td>" + 
+                    "<td><div style='display: flex;'>" + b.entapp_status + "</div></td>" +
+                    "<td><div style='display: flex; align-items: center;'><div style='color: " + colorForStatus +
+                    "; font-weight: 100'>" + b.sent_status + " " + iconForStatus + "</div></div></td>" +
+                    "<td><div style='display: flex;'>" + "<a href='#' onClick='ClickLinkEA(event)' style='color: white; list-style-type: none;'>" +
+                        "<div style='width: 12vw' class='profile-button'>Посмотреть<p hidden id='linkbtn'>" + b.it_id + "</p></div>" +
+                    "</a> </div>" + 
+                "</td>" + "</tr>"
+                $("#ealisting").append(row);
+            });
+        }
+
+        else{
+            // если для данного фильтра не найдено результата, то не отображать результат
+            $("#no_results h5").html("No results found");
+            $("#ealist_data").hide();
+            $("#no_results").show();
+        }
+
+        // установка URL предыдущей и следующей страницы для данного результата
+        let prev_url = result["previous"];
+        let next_url = result["next"];
+
+        // кнопка отключения-включения в зависимости от наличия следующей/предыдущей страницы
+        if (prev_url === null) {
+            $("#previous").addClass("disabled");
+            $("#previous").prop('disabled', true);
+        } else {
+            $("#previous").removeClass("disabled");
+            $("#previous").prop('disabled', false);
+        }
+        if (next_url === null) {
+            $("#next").addClass("disabled");
+            $("#next").prop('disabled', true);
+        } else {
+            $("#next").removeClass("disabled");
+            $("#next").prop('disabled', false);
+        }
+
+        // установка URL-адреса
+        $("#previous").attr("url", result["previous"]);
+        $("#next").attr("url", result["next"]);
+
+        // отображение количества результатов
+        $("#result-count span").html(result["count"]);
+    }
+
+    $("#next").click(function () {
+        // загрузите данные следующей страницы и поместите результат в тело таблицы, выполнив вызов ajax для следующего доступного URL-адреса
+        let url = $(this).attr("url");
+        if (!url)
+            $(this).prop('all', true);
+
+        $(this).prop('all', false);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    })
+
+    $("#previous").click(function () {
+        // загрузите данные предыдущей страницы и поместите результат в тело таблицы, выполнив ajax-вызов предыдущего доступного URL-адреса
+        let url = $(this).attr("url");
+        if (!url)
+            $(this).prop('all', true);
+
+        $(this).prop('all', false);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    })
+
+
+    function getAPIData() {
+        let url = $('#ealist_data').attr("url")
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: send_data,
+            beforeSend: function(){
+                $("#no_results h5").html("Загрузка данных...");
+            },
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function (response) {
+                $("#no_results h5").html("Что-то пошло не так");
+                $("#ealist_data").hide();
+            }
+        });
+    }
+
+
+    function getSentStatus() {
+        let url = $("#sent_status").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                sent_status_option = "<option value='all' selected>Статус просмотра заявки</option>";
+                $.each(result["sent_status"], function (a, b) {
+                    sent_status_option += "<option>" + b + "</option>"
+                });
+                $("#sent_status").html(sent_status_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getEntappStatus() {
+        let url = $("#entapp_status").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                entapp_status_option = "<option value='all' selected>Статус заявки</option>";
+                $.each(result["entapp_status"], function (a, b) {
+                    entapp_status_option += "<option>" + b + "</option>"
+                });
+                $("#entapp_status").html(entapp_status_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+    
+    function ClickLinkEA(evt) {
+        var clickedLink = evt.target; // get the clicked anchor tag
+        var linkea = clickedLink.querySelector("#linkbtn").textContent.trim();
+        //alert('linkea = ' + linkea);
+        document.cookie = "linkea=" + linkea;
+
+        function setCookie(cName, cValue, expDays) {
+          let date = new Date();
+          date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));
+          const expires = "expires=" + date.toUTCString();
+          document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
+        }
+        setCookie('linkea', linkea);
+
+        var l = "{% url 'entapp_invtech' %}";
+        location.href = l;
+    }
+</script>

@@ -1,0 +1,511 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>QazJolGZI</title>
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/karzav.css' %}">
+</head>
+
+<body class="body">
+    {% if request.user.role is None %}
+        <script>
+            window.location.href = "{% url 'polls:login_user' %}"
+        </script>
+    {% endif %}
+
+    <div class="page_header">
+        <div class="header_logo">
+            <div class="logo">
+                <a href="{% url 'title' %}"><img src="/static/images/logo_qazjol_kz.png" class="logo_png"/></a>
+            </div>
+        </div>
+        <div class="header_menu">
+            <ul class="menu_list" id="menuList">
+                <li class="list_item"><a href="{% url 'mapp' %}" >Карта карьеров</a></li>
+                <li class="list_item selected_link"><a href="{% url 'karzav_list' %}" >Карьеры и заводы</a></li>
+                <li class="list_item"><a href="{% url 'invtech_list' %}" >Реестр инновационных технологий</a></li>
+                <li class="list_item"><a href="{% url 'entapp_form' %}">Отправить заявку на внесение</a></li>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.role.id == 3 or request.user.role.id == 4 %}
+                        <li class="list_item"><a href="{% url 'entapp_list' %}">Заявки</a></li>
+                    {% endif %}
+                    <li class="list_item"><a href="{% url 'polls:profile' %}" >Профиль</a></li>
+                {% else %}
+                    <li class="list_item"><a href="{% url 'polls:login_user' %}" >Авторизация</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="logo">
+            <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+                <svg width="50" height="60" viewBox="0 0 100 100">
+                  <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path class="line line2" d="M 20,50 H 80" />
+                  <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="page_content">
+        <div class="content-title">
+            <h2 style="text-align:center;"><b>Карьеры и заводы</b></h2>
+        </div>
+        <div class="content">
+            <div class="filters">
+
+                <div class="search_form">
+                    <form id="search_form" class="form_for_search">
+                        <input type="text" id="search_inp" class="search_inp" name="q" placeholder="Поиск...">
+                        <button type="submit" class="search_btn"><i class="fa fa-search"></i></button>
+                    </form>
+                    <button id="dropdown" onclick="togglefilter()" class="dropdown_btn"><i id="dropdown_icon" class="fa"></i></button>
+                </div>
+
+                <div class="filter-collection" id="filter-collection">
+                    <div class="filter">
+                        <select class="selects" id="oblasti" url = "{% url 'get_oblasti' %}"/></select>
+                    </div>
+
+                    <div class="filter">
+                        <select class="selects" id="raiony" url = "{% url 'get_raiony' %}"/></select>
+                    </div>
+
+                    <div class="filter">
+                        <select class="selects" id="statusy" url = "{% url 'get_statusy' %}"/></select>
+                    </div>
+
+                    <div class="filter">
+                        <select class="selects" id="nedrousers" url = "{% url 'get_nedrousers' %}"/></select>
+                    </div>
+
+                    <div class="filter">
+                        <select class="selects" id="sort_by">
+                            <option selected="true" disabled="disabled" value = "none">Сортировка</option>
+                            <option value='by_nedrouser'>по недропользователям</option>
+                            <option value='by_mestorojdenie'>по месторождениям</option>
+                            <option value='by_material'>по материалам</option>
+                        </select>
+                    </div>
+
+                    <div class="filter">
+                        <button class="selects" id="display_all">Показать все</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div id="fltr0" class="boxes" style="display: block;">
+                <div id = "no_results">
+                    <h5>Результаты не найдены</h5>
+                </div>
+                <table id="list_data" url = "{% url 'listing' %}" class="table-content">
+                    <tbody id="listing" class="tbody-content"></tbody>
+                </table>
+            
+                <div class="paginate">
+                    <nav aria-label="navigation">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button class="btn btn-primary-my page-link" id="previous"><<</button>
+                            </li>
+                            <li class="page-item pull-right">
+                                <button class="btn btn-primary-my page-link" id="next">>></button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page_footer">
+        <div class="footer-col1">
+            &#169; Все права защищены
+        </div>
+        <div class="footer-col2">
+            <div class="ftitle"> <b>Контакты</b> </div>
+            <div class="fval">г. Астана, ул. Туран 75</div>
+            <div class="fval fphones">
+                <a href="tel:+7 (7172) 72-98-17" style="color:black;">+7 (7172) 72-98-17</a>
+            </div>
+            <div class="fvals">
+                <a href="mailto:kense@qazjolgzi.kz" style="color:black;">kense@qazjolgzi.kz</a>
+            </div>
+        </div>
+        <div class="footer-col3">
+            АО “КаздорНИИ”
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var menu_list = document.getElementById('menuList');
+    menu_list.style.maxHeight = "0px";
+
+    function togglemenu() {
+        menu_list.style.color = "white";
+        if (menu_list.style.maxHeight == "0px") {
+            menu_list.style.maxHeight = "300px"
+        }
+        else {
+            menu_list.style.maxHeight = "0px"
+        }
+    };
+
+    var dropdown_icon = document.getElementById('dropdown_icon');
+    dropdown_icon.classList.add('fa-angle-down');
+    var filter_collection = document.getElementById('filter-collection');
+
+    var maxHeight = "0px";
+    filter_collection.style.maxHeight = maxHeight;
+
+    function togglefilter() {
+        if ( filter_collection.style.maxHeight == "0px") {
+            dropdown_icon.classList.remove('fa-angle-down');
+            dropdown_icon.classList.add('fa-angle-up');
+            filter_collection.style.maxHeight = "60vh";
+        } else {
+            dropdown_icon.classList.add('fa-angle-down');
+            var maxHeight = "0px";
+            if (window.innerWidth > 1065) {
+                maxHeight = "60vh";
+            }
+            filter_collection.style.maxHeight = maxHeight;
+        }
+    }
+
+    // переменная, которая хранит всю информацию о фильтре
+    var send_data = {}
+        
+    $(document).ready(function () {
+        // сбросить все параметры при загрузке страницы
+        resetFilters();
+
+        // привести все данные без всяких фильтров
+        getAPIData();
+        
+        getOblasti();
+        getRaiony();
+        getStatusy();
+        // получить все nedrousers из БД через вызов AJAX в опции выбора страны
+        getNedrousers();
+
+
+        $('#oblasti').on('change', function () {
+            //alert('hello Eli');
+            //$("#raiony").val("all");
+            //send_data['raion'] = '';
+            if(this.value == "all")
+                send_data['oblast'] = "";
+            else
+                send_data['oblast'] = this.value;
+            //getRaiony(this.value);
+            getAPIData();
+        });
+
+        $('#raiony').on('change', function () {
+            if(this.value == "all")
+                send_data['raion'] = "";
+            else
+                send_data['raion'] = this.value;
+
+            getAPIData();
+        });
+
+        $('#statusy').on('change', function () {
+            if(this.value == "all")
+                send_data['status'] = "";
+            else
+                send_data['status'] = this.value;
+
+            getAPIData();
+        });
+
+        // при выборе опции nedrousers
+        $('#nedrousers').on('change', function () {
+            // обновить выбранную nedrouser
+            if(this.value == "all")
+                send_data['nedrouser'] = "";
+            else
+                send_data['nedrouser'] = this.value;
+
+            // получить данные API обновленных фильтров
+            getAPIData();
+        });
+
+        $('#sort_by').on('change', function () {
+            send_data['sort_by'] = this.value;
+            getAPIData();
+        });
+
+        // отображать результаты после сброса фильтров
+        $("#display_all").click(function(){
+            resetFilters();
+            getAPIData();
+        })
+
+        $("#search_form").submit(function(e) {
+            e.preventDefault();
+            send_data['search'] = $("#search_inp").val();
+            getAPIData();
+        });
+    })
+
+
+    /* Функция, которая сбрасывает все фильтры */
+    function resetFilters() {
+        $("#oblasti").val("all");
+        $("#raiony").val("all");
+        $("#statusy").val("all");
+        $("#nedrousers").val("all");
+        $("#sort_by").val("none");
+        $("#search_inp").val("");
+        
+        send_data['oblast'] = '';
+        send_data['raion'] = '';
+        send_data['status'] = '';
+        send_data['nedrouser'] = '';
+        send_data["sort_by"] = '',
+        send_data["search"] = '',
+        send_data['format'] = 'json';
+    }
+
+
+    /* Вспомогательная функция для демонстрации данных API, которые мы получили от серверной части, в содержимое таблицы. */
+    function putTableData(result) {
+        // создание строки таблицы для каждого результата и нажатие на html-содержимое тела таблицы таблицы списка
+        let row;
+        if(result["results"].length > 0){
+            $("#no_results").hide();
+            $("#list_data").show();
+            $("#listing").html("");
+            $.each(result["results"], function (a, b) {
+                colorname = "#e03636"
+                if (b.status == "активный") {
+                    colorname = "#99db9c"
+                }                
+                row = "<div class='box'>" + 
+                "<div class='inside_box1'> " +
+                "<tr> <td class='label1'>Недропользователь:</td> <td class='record'> <a href='#' onClick='ClickLinkKZCv(event)'>" + b.nedrouser + "</a> </td> </tr> <br/>" + 
+                "<tr> <td class='label1'>Месторождение:</td> <td class='record'>" + b.mestorojdenie + "</a> </td> </tr> <br/>" + 
+                "<tr> <td class='label1'>Материал:</td> <td class='record'> <a href='#' onClick='ClickLinkFMHv(event)'>" + b.material + "</a> </td> </tr>" +
+                "</div>" +
+                "<div class='inside_box2'> " +
+                "Статус: " + b.status + " <br/>" + 
+                "<div style='width: 100%; height: 5px; border-radius: 25px; background-color:" + colorname + "'></div>" +
+                "</div>" +
+                "</div>"
+                $("#listing").append(row);
+            });
+        }
+        else{
+            // если для данного фильтра не найдено результата, то не отображать результат
+            $("#no_results h5").html("No results found");
+            $("#list_data").hide();
+            $("#no_results").show();
+        }
+
+        // установка URL предыдущей и следующей страницы для данного результата
+        let prev_url = result["previous"];
+        let next_url = result["next"];
+
+        // кнопка отключения-включения в зависимости от наличия следующей/предыдущей страницы
+        if (prev_url === null) {
+            $("#previous").addClass("disabled");
+            $("#previous").prop('disabled', true);
+        } else {
+            $("#previous").removeClass("disabled");
+            $("#previous").prop('disabled', false);
+        }
+        if (next_url === null) {
+            $("#next").addClass("disabled");
+            $("#next").prop('disabled', true);
+        } else {
+            $("#next").removeClass("disabled");
+            $("#next").prop('disabled', false);
+        }
+
+        // установка URL-адреса
+        $("#previous").attr("url", result["previous"]);
+        $("#next").attr("url", result["next"]);
+
+        // отображение количества результатов
+        $("#result-count span").html(result["count"]);
+    }
+
+    $("#next").click(function () {
+        // загрузите данные следующей страницы и поместите результат в тело таблицы, выполнив вызов ajax для следующего доступного URL-адреса
+        let url = $(this).attr("url");
+        if (!url)
+            $(this).prop('all', true);
+
+        $(this).prop('all', false);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    })
+
+    $("#previous").click(function () {
+        // загрузите данные предыдущей страницы и поместите результат в тело таблицы, выполнив ajax-вызов предыдущего доступного URL-адреса
+        let url = $(this).attr("url");
+        if (!url)
+            $(this).prop('all', true);
+
+        $(this).prop('all', false);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    })
+
+
+    function getAPIData() {
+        let url = $('#list_data').attr("url")
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: send_data,
+            beforeSend: function(){
+                $("#no_results h5").html("Загрузка данных...");
+            },
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function (response) {
+                $("#no_results h5").html("Что-то пошло не так");
+                $("#list_data").hide();
+            }
+        });
+    }
+
+
+    function getOblasti() {
+        let url = $("#oblasti").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                oblasti_option = "<option value='all' selected>Область</option>";
+                $.each(result["oblasti"], function (a, b) {
+                    oblasti_option += "<option>" + b + "</option>"
+                });
+                $("#oblasti").html(oblasti_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getRaiony() {
+        let url = $("#raiony").attr("url");
+        let raiony_option = "<option value='all' selected>Район</option>";
+        $.ajax({
+            method: 'GET',
+            url: url,
+            //data: { "oblast": oblast },
+            data: { },
+            success: function (result) {
+                $.each(result["raiony"], function (a, b) {
+                    raiony_option += "<option>" + b + "</option>"
+                });
+                $("#raiony").html(raiony_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getStatusy() {
+        let url = $("#statusy").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                statusy_option = "<option value='all' selected>Статус</option>";
+                $.each(result["statusy"], function (a, b) {
+                    statusy_option += "<option>" + b + "</option>"
+                });
+                $("#statusy").html(statusy_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getNedrousers() {
+        // заполните параметры nedrousers, сделав вызов ajax, чтобы получить URL-адрес из nedrousers, выберите входной атрибут
+        let url = $("#nedrousers").attr("url");
+
+        // делает запрос к методу getNedrousers(request) в представлениях
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                nedrousers_option = "<option value='all' selected>Недропользователь</option>";
+                $.each(result["nedrousers"], function (a, b) {
+                    nedrousers_option += "<option>" + b + "</option>"
+                });
+                $("#nedrousers").html(nedrousers_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+    function ClickLinkKZCv(evt) {
+        var clickedLink = evt.target; // get the clicked anchor tag
+        var link_kzcv = clickedLink.innerText;
+        //alert('link_kzcv = ' + link_kzcv);
+        document.cookie = "link_kzcv=" + link_kzcv;
+        var l = "{% url 'karzav_cardv' %}";
+        location.href = l;
+    }
+    function ClickLinkFMHv(evt) {
+        var clickedLink = evt.target; // get the clicked anchor tag
+        var link_fmhv = clickedLink.innerText;
+        //alert('link_fmhv = ' + link_fmhv);
+        document.cookie = "link_fmhv=" + link_fmhv;
+  
+        function setCookie(cName, cValue, expDays) {
+          let date = new Date();
+          date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000));
+          const expires = "expires=" + date.toUTCString();
+          document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
+        }
+        setCookie('link_fmhv', link_fmhv);
+
+        var l = "{% url 'fizmeh_harv' %}";
+        location.href = l;
+    }
+</script>
+</html>

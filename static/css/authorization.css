@@ -1,0 +1,391 @@
+body {
+    background: linear-gradient(rgba(44, 55, 69, 0.50), rgba(44, 55, 69, 0.50)), url("/static/images/title.jpeg");
+    /*background: rgba(38, 38, 38, 0.7);*/
+    background-size: 100% 100%;
+    font-family: "Open Sans", sans-serif;
+    height: 100vh;
+    width: 100%;
+    align-items: center;
+    margin: 0;
+}
+
+h2 {
+    font-family: "Aladin", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    font-size: 25px;
+    text-transform: uppercase;
+    display:inline-block;
+    color: #333333;
+}
+
+h3 {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    padding: 0 20px;
+    color: #000000;
+}
+
+.body-auth {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-auth {
+    width: 60vw;
+    min-height: 40vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5vh 5vw;
+    border-radius: 15px;
+}
+
+.content-auth-text {
+    min-width: 30vw;
+    min-height: 40vh;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5vh 5vw;
+    border-radius: 15px;
+}
+
+.h-auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.h-auth-line {
+    display: flex;
+}
+
+.form-auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 30vw;
+    margin-top: 10vh;
+}
+
+.input-auth {
+
+}
+
+.input-auth-line {
+    display: flex;
+    justify-content: space-between;
+    width: 45vw;
+}
+
+.line-mid {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.line-btm {
+    margin-top: 2vh;
+    margin-bottom: 5vh;
+}
+
+.duo {
+    width: 22vw !important;
+}
+
+.solo {
+    width: 45vw !important;
+}
+
+.input-auth-line-text {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type = text], [type = password], input[type = button], input[type = email], input[type = number]{
+    background-color: #eaeaea;
+    border: none;
+    width: 16vw;
+    padding: 2vh 3vw;
+    text-align: left;
+    display: inline-block;
+    font-size: 16px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    border-radius: 10px;
+}
+
+.input-auth-line-text input[type = text], .input-auth-line-text input[type = email] {
+    margin-bottom: 2vh;
+}
+
+select {
+    appearance: none;
+    background-color: #eaeaea;
+    border: none;
+    width: 45vw;
+    padding: 2vh 3vw;
+    text-align: left;
+    display: inline-block;
+    font-size: 16px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    border-radius: 10px;
+}
+
+.button-auth {
+    background-color: #424B5A;
+    border-radius: 60px;
+    width: 22vw;
+    border: none;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 700;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.button-auth:hover  {
+    background-color: #54585e;
+}
+
+.input-auth-line .password-block-auth {
+    position: relative;
+}
+
+.input-auth-line-text .password-block-auth{
+    position: relative;
+    margin-bottom: 2vh;
+}
+
+.button-password-auth {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background-color: #eaeaea;
+}
+
+.a-block-auth {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 20vw;
+    padding-left: 2vw;
+}
+
+.a-reg-auth {
+    color: #424B5A;
+    display: flex;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: underline;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.a-reg-auth:hover {
+    color: #687181;
+    fill: #687181;
+}
+
+.footer-auth {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 15vh;
+    width: 45vw;
+    align-items: center;
+}
+
+.question-mark-icon {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px;
+    width: 15px;
+    height: 15px;
+    border: 2px solid #424B5A;
+    border-radius: 15px;
+    color: #424B5A;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.a-auth {
+    color: #424B5A;
+    display:inline-block;
+    text-decoration: underline;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.a-auth:hover {
+    color: #687181;
+}
+
+svg:hover {
+    fill: #687181;
+}
+
+/* ANIMATIONS */
+
+/* Simple CSS3 Fade-in-down Animation */
+.fadeInDown {
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+/* Simple CSS3 Fade-in Animation */
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.fadeIn {
+    opacity:0;
+    -webkit-animation:fadeIn ease-in 1;
+    -moz-animation:fadeIn ease-in 1;
+    animation:fadeIn ease-in 1;
+
+    -webkit-animation-fill-mode:forwards;
+    -moz-animation-fill-mode:forwards;
+    animation-fill-mode:forwards;
+
+    -webkit-animation-duration:1s;
+    -moz-animation-duration:1s;
+    animation-duration:1s;
+}
+
+.fadeIn.first {
+    -webkit-animation-delay: 0.4s;
+    -moz-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
+
+.fadeIn.second {
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+}
+
+.fadeIn.third {
+    -webkit-animation-delay: 0.8s;
+    -moz-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+}
+
+.fadeIn.fourth {
+    -webkit-animation-delay: 1s;
+    -moz-animation-delay: 1s;
+    animation-delay: 1s;
+}
+
+@media only screen and (max-width: 1065px) {
+    .button-auth {
+        width: 45vw;
+        margin-bottom: 2vh;
+    }
+
+    .a-block-auth {
+        width: 45vw;
+        padding-left: 0;
+        justify-content: center;
+        margin-bottom: 5vh;
+    }
+
+    .input-auth-line {
+        flex-direction: column;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .input-auth-line-text input[type = text], input[type = button], .input-auth-line-text input[type = email], input[type = number] {
+        text-align: center;
+        width: 45vw !important;
+        margin-bottom: 2vh;
+    }
+
+    .input-auth-line input[type = text], .input-auth-line input[type = button], .input-auth-line input[type = email], .input-auth-line input[type = number]{
+        text-align: center;
+        width: 39vw !important;
+        margin-bottom: 2vh;
+    }
+
+    .input-auth-line input[type = password] {
+        text-align: center;
+        width: 39vw !important;
+    }
+
+    .input-auth-line-text input[type = password] {
+        text-align: center;
+        width: 45vw !important;
+    }
+
+    select {
+        text-align: center;
+        width: 45vw !important;
+        margin-bottom: 2vh;
+    }
+
+    .solo {
+        width: 45vw;
+    }
+
+    .duo {
+        width: 45vw !important;
+    }
+
+    .password-block-auth {
+        margin-bottom: 2vh;
+    }
+}

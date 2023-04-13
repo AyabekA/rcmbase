@@ -1,0 +1,64 @@
+CREATE TABLE `invtech_info` (
+  `it_id` int NOT NULL AUTO_INCREMENT,
+  `invtech` varchar(100) NOT NULL,
+  `usingarea` varchar(100) NOT NULL,
+  `prov_name` varchar(100) NOT NULL,
+  `prod_name` varchar(100) NOT NULL,
+  `status` varchar(45) NOT NULL,
+  `images` varchar(100) DEFAULT NULL,
+  `full_hars` varchar(100) NOT NULL,
+  `otchet_kazdornii` varchar(100) DEFAULT NULL,
+  `passport_safety` varchar(100) DEFAULT NULL,
+  `rrk` varchar(100) DEFAULT NULL,
+  `conclusion_kazdornii` varchar(100) DEFAULT NULL,
+  `certification_reference` varchar(100) DEFAULT NULL,
+  `quality_certificate` varchar(100) DEFAULT NULL,
+  `conformity_certificate` varchar(100) DEFAULT NULL,
+  `lab_conclusion` varchar(100) DEFAULT NULL,
+  `ses_expert_conclusion` varchar(100) DEFAULT NULL,
+  `state_registration_certificate` varchar(100) DEFAULT NULL,
+  `akt` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`it_id`),
+  UNIQUE KEY `it_id_UNIQUE` (`it_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+
+
+
+
+
+
+CREATE TABLE `temp_invtech_info` (
+  `it_id` int NOT NULL AUTO_INCREMENT,
+  `invtech` varchar(100) NOT NULL,
+  `usingarea` varchar(100) NOT NULL,
+  `prov_name` varchar(100) NOT NULL,
+  `prod_name` varchar(100) NOT NULL,
+  `status` varchar(45) NOT NULL,
+  `images` varchar(100) DEFAULT NULL,
+  `full_hars` varchar(100) NOT NULL,
+  `otchet_kazdornii` varchar(100) DEFAULT NULL,
+  `passport_safety` varchar(100) DEFAULT NULL,
+  `rrk` varchar(100) DEFAULT NULL,
+  `conclusion_kazdornii` varchar(100) DEFAULT NULL,
+  `certification_reference` varchar(100) DEFAULT NULL,
+  `quality_certificate` varchar(100) DEFAULT NULL,
+  `conformity_certificate` varchar(100) DEFAULT NULL,
+  `lab_conclusion` varchar(100) DEFAULT NULL,
+  `ses_expert_conclusion` varchar(100) DEFAULT NULL,
+  `state_registration_certificate` varchar(100) DEFAULT NULL,
+  `akt` varchar(100) DEFAULT NULL,
+  `lname` varchar(100) NOT NULL,
+  `fname` varchar(100) NOT NULL,
+  `dname` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(100) NOT NULL,
+  `addition` varchar(100) DEFAULT NULL,
+  `sent_status` varchar(45) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `entapp_status` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`it_id`),
+  UNIQUE KEY `it_id_UNIQUE` (`it_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

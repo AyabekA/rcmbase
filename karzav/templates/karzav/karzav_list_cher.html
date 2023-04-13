@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Реестр инновационнных технологий</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    .page_header {
+        width: 100%;
+        height: 9vh;
+        display: flex;
+        background-color: #F8F8FF;
+    }
+
+    .header_logo {
+        width: 15%;
+        display: flex;
+        align-items: center;
+    }
+    
+    .logo {
+    }
+    
+    .logo_png {
+        margin-left: 10%;
+        width: 90%;
+        border: 1;
+    }
+
+    .empty_space {
+        width: 5%;
+    }
+
+    .header_menu {
+        width: 80%;
+    }
+
+    .menu_list {
+        list-style-type: none;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    .list_item {
+        margin-right: 20px;
+        font-size: 20px;
+        color: black;
+    }
+
+    .page_content {
+        width: 100%;
+        height: 85vh;
+    }
+
+    .topic {
+        width: 100%;
+        height: 85vh;
+    }
+
+    .h1 {
+        font-size: 80px;
+        color: white;
+        margin: 10px;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .content_title {
+        width: 100%;
+        height: 5vh;
+        background-color: red;
+        display: flex;
+        align-items: center;
+    }
+
+    .h2 {
+        text-align: center;
+    }
+    
+    .content {
+        width: 100%;
+        height: 80vh;
+        background-color: white;  
+        display: flex;
+    }
+
+    .filters {
+        width: 25%;
+        padding-top: 20px;
+    }
+
+    .selects {
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: #4c9bad;
+        background-color: #f2f8fd;
+        padding: 6px 30px;
+        width: 18vw;
+        margin-left: 5vw;
+        margin-right: 2vw;
+        height: 5vh;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-family: "Georgia";
+    } 
+
+    .filter0 {
+        border: 1px solid;
+        border-radius: 20px;
+        border-color: #4c9bad;
+        background-color: #f2f8fd;
+        padding: 6px 30px;
+        width: 17vw;
+        margin-left: 6vw;
+        margin-right: 2vw;
+        height: 5vh;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-family: "Georgia";
+    } 
+
+    .labels {
+        margin-left: 6vw;
+        margin-right: 2vw;
+        font-size: 18px;
+        font-family: "Georgia";
+    }
+    
+    label {
+        margin-left: 6vw;
+        margin-right: 2vw;
+        font-size: 18px;
+        font-family: "Georgia";
+    }
+
+    input {
+        border: 1px solid;
+        border-radius: 10px;
+        border-color: #4c9bad;
+        background-color: #f2f8fd;
+        padding: 6px 30px;
+        width: 17vw;
+        margin-left: 6vw;
+        margin-right: 2vw;
+        height: 5vh;
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-family: "Georgia";
+    }
+
+    .boxes {
+        width: 75%;
+        padding-top: 25px;
+    }
+
+    .box {
+        border-radius: 20px;
+        background-color: #E3ECEE;
+        padding: 7px 50px;
+        width: 65vw;
+        margin-left: 4vw;
+        margin-right: 6vw;
+        height: 14vh;
+        margin-bottom: 25px;
+        font-size: 18px;
+        font-family: "Georgia";
+    }
+    
+    .paginate {
+        text-align: center;
+    }
+    
+    .pagination {
+        display:inline-block;
+    }
+
+    
+    .page_footer {
+        width: 100%;
+        background-color: #F8F8FF;
+        display: flex;
+    }
+
+  </style>
+</head>
+
+<body class="body">
+    <div class="page_header">
+        <div class="header_logo">
+            <div class="logo">
+                <a href="#"><img src="/static/images/logo_qazjol_kz.png" class="logo_png"/></a>
+            </div>
+        </div>
+        <div class="empty_space"></div>
+        <div class="header_menu">
+            <ul class="menu_list">
+                <li class="list_item"><a href="#" style="color:black;">Карта карьеров</a></li>
+                <li class="list_item"><a href="#" style="color:black;">Карьеры и заводы</a></li>
+                <li class="list_item"><a href="#" style="color:black;">Реестр инновационных технологий</a></li>
+                <li class="list_item"><a href="#" style="color:black;">Отправить заявку на внесение</a></li>
+            </ul>
+        </div>
+        <div class="logo">
+            {#<img class="menu_icon" onclick="togglemenu()" src="menu.png" class="menu_icon"/>#}
+            <button class="menu menu_icon" onclick="this.classList.toggle('opened');this.setAttribute('aria-expanded', this.classList.contains('opened')); togglemenu()" aria-label="Main Menu">
+                <svg width="50" height="50" viewBox="0 0 100 50">
+                  <path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                  <path class="line line2" d="M 20,50 H 80" />
+                  <path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="page_content">
+        <div class="content-title">
+            <h2 style="text-align:center;"><b>Карьеры и заводы</b></h2>
+        </div>
+        <div class="content">
+            <div class="filters">
+                <form method="get">
+                    {{ filters.form }}
+                    <input type="submit" value="Поиск">
+                </form>
+
+                <div class="filter">
+                    <label for="mestorojdeniya" class="labels">Месторождение</label><br/>
+                    <select class="selects" id="mestorojdeniya" url = "{% url 'get_mestorojdeniya' %}"/></select>
+                </div>
+                
+                <div class="filter">
+                    <label for="companies" class="labels">Компания</label><br/>
+                    <select class="selects" id="companies" url = "{% url 'get_companies' %}"/></select>
+                </div>
+                
+                <div class="filter">
+                    <label for="vidnidropolzovaniya" class="labels">Вид нидропользования</label><br/>
+                    <select class="selects" id="vidnidropolzovaniya" url = "{% url 'get_vidnidropolzovaniya' %}"/></select>
+                </div>
+                
+                <div class="filter">
+                    <label for="oblasti" class="labels">Область</label><br/>
+                    <select class="selects" id="oblasti" url = "{% url 'get_oblasti' %}"/></select>
+                </div>
+                
+                <div class="filter">
+                    <label for="raiony" class="labels">Район</label><br/>
+                    <select class="selects" id="raiony" url = "{% url 'get_raiony' %}"/></select>
+                </div>
+                
+                <div class="filter">
+                    <label for="statusy" class="labels">Статус</label><br/>
+                    <select class="selects" id="statusy" url = "{% url 'get_statusy' %}"/></select>
+                </div>
+
+                <div class="filter">
+                    <label for="Province" class="labels">Сортировка</label>
+                    <select class="selects" id="sort_by">
+                        <option selected="true" disabled="disabled" value = "none">Выберите вариант</option>
+                        <option value='by_mst_name'>по месторождениям</option>
+                        <option value='by_comp_name'>по компаниям</option>
+                        <option value='by_vn_name'>по видам нидропользования</option>
+                        <option value='by_oblast'>по областям</option>
+                        <option value='by_raion'>по районам</option>
+                        <option value='by_status'>по статусам</option>
+                    </select>
+                </div>
+
+                <div class="filter">
+                    <a class="selects" id="display_all">Показать все</a>
+                </div>
+
+            </div>
+
+
+            <div id="fltr0" class="boxes" style="display: block;">
+                <div id = "no_results">
+                    <h5>Результаты не найдены</h5>
+                </div>
+                <table id="list_data" url = "{% url 'listing' %}">
+                    <tbody id="listing"></tbody>
+                </table>
+            
+                <div class="paginate">
+                    <nav aria-label="navigation">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <button class="btn btn-primary page-link" id="previous"><<</button>
+                            </li>
+                            <li class="page-item pull-right">
+                                <button class="btn btn-primary page-link" id="next">>></button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // переменная, которая хранит всю информацию о фильтре
+    var send_data = {}
+        
+    $(document).ready(function () {
+        // сбросить все параметры при загрузке страницы
+        resetFilters();
+
+        // привести все данные без всяких фильтров
+        getAPIData();
+
+        getMestorojdeniya();
+        // получить все страны из БД через вызов AJAX в опции выбора страны
+        getCompanies();
+        getVidnidropolzovaniya();
+        getOblasti();
+        getRaiony();
+        getStatusy();
+
+        $('#mestorojdeniya').on('change', function () {
+            if(this.value == "all")
+                send_data['mst_name'] = "";
+            else
+                send_data['mst_name'] = this.value;
+
+            getAPIData();
+        });
+
+        // при выборе опции страны
+        $('#companies').on('change', function () {
+            // обновить выбранную страну
+            if(this.value == "all")
+                send_data['comp_name'] = "";
+            else
+                send_data['comp_name'] = this.value;
+
+            // получить данные API обновленных фильтров
+            getAPIData();
+        });
+
+        $('#vidnidropolzovaniya').on('change', function () {
+            if(this.value == "all")
+                send_data['vn_name'] = "";
+            else
+                send_data['vn_name'] = this.value;
+
+            getAPIData();
+        });
+
+        $('#oblasti').on('change', function () {
+            if(this.value == "all")
+                send_data['oblast'] = "";
+            else
+                send_data['oblast'] = this.value;
+
+            getAPIData();
+        });
+
+        $('#raiony').on('change', function () {
+            if(this.value == "all")
+                send_data['raion'] = "";
+            else
+                send_data['raion'] = this.value;
+
+            getAPIData();
+        });
+
+        $('#statusy').on('change', function () {
+            if(this.value == "all")
+                send_data['status'] = "";
+            else
+                send_data['status'] = this.value;
+
+            getAPIData();
+        });
+
+        // сортировать данные по цене/баллам
+        $('#sort_by').on('change', function () {
+            send_data['sort_by'] = this.value;
+            getAPIData();
+        });
+
+        // отображать результаты после сброса фильтров
+        $("#display_all").click(function(){
+            resetFilters();
+            getAPIData();
+        })
+
+        /*
+        const anchorList = document.querySelectorAll('a'); //a.oplinkc
+        for (let anchor of anchorList) {
+            anchor.addEventListener("click", ClickedLink);
+        }
+        function ClickedLink(evt) {
+            const opvar = this.innerHTML; //opvar peredaem na sled stranicu
+            alert(opvar);
+            //sessionStorage.setItem('alink', JSON.stringify([opvar,]));
+            document.cookie = "alink=" + opvar;
+        }*/
+    })
+
+
+    /* Функция, которая сбрасывает все фильтры */
+    function resetFilters() {
+        $("#mestorojdeniya").val("all");
+        $("#companies").val("all");
+        $("#vidnidropolzovaniya").val("all");
+        $("#oblasti").val("all");
+        $("#raiony").val("all");
+        $("#statusy").val("all");
+        $("#sort_by").val("none");
+        
+        send_data['mst_name'] = '';
+        send_data['comp_name'] = '';
+        send_data['vn_name'] = '';
+        send_data['oblast'] = '';
+        send_data['raion'] = '';
+        send_data['status'] = '';
+        send_data["sort_by"] = '',
+        send_data['format'] = 'json';
+    }
+
+
+    /* Вспомогательная функция для демонстрации данных API, которые мы получили от серверной части, в содержимое таблицы. */
+    function putTableData(result) {
+        // создание строки таблицы для каждого результата и нажатие на html-содержимое тела таблицы таблицы списка
+        let row;
+        if(result["results"].length > 0){
+            $("#no_results").hide();
+            $("#list_data").show();
+            $("#listing").html("");
+            $.each(result["results"], function (a, b) {
+                row = "<div class='box'>" + 
+                "<tr> <td class='label0'>Статус:</td> <td class='record0'> <a href=\"{% url 'karzav_cardv' %}\" id='oplink' class='oplinkc'>" + b.status + "</a> </td> </tr> <br/>" + 
+                "<tr> <td class='label1'>Месторождение:</td> <td class='record'> <a href='#' onClick='ClickLink(event)'>" + b.mst_name + "</a> </td> </tr> <br/>" + 
+                "<tr> <td class='label1'>Компания:</td> <td class='record'> <a href=\"{% url 'karzav_cardv' %}\" id='oplink' class='oplinkc'>" + b.comp_name + "</a> </td> </tr> <br/>" + 
+                "<tr> <td class='label1'>Вид нидропользования:</td> <td class='record'> <a href=\"{% url 'karzav_cardv' %}\" id='oplink' class='oplinkc'>" + b.vn_name + "</a> </td> </tr>" +
+                "</div>"
+                $("#listing").append(row);
+            });
+        }
+        else{
+            // если для данного фильтра не найдено результата, то не отображать результат
+            $("#no_results h5").html("No results found");
+            $("#list_data").hide();
+            $("#no_results").show();
+        }
+
+        // установка URL предыдущей и следующей страницы для данного результата
+        let prev_url = result["previous"];
+        let next_url = result["next"];
+
+        // кнопка отключения-включения в зависимости от наличия следующей/предыдущей страницы
+        if (prev_url === null) {
+            $("#previous").addClass("disabled");
+            $("#previous").prop('disabled', true);
+        } else {
+            $("#previous").removeClass("disabled");
+            $("#previous").prop('disabled', false);
+        }
+        if (next_url === null) {
+            $("#next").addClass("disabled");
+            $("#next").prop('disabled', true);
+        } else {
+            $("#next").removeClass("disabled");
+            $("#next").prop('disabled', false);
+        }
+
+        // установка URL-адреса
+        $("#previous").attr("url", result["previous"]);
+        $("#next").attr("url", result["next"]);
+
+        // отображение количества результатов
+        $("#result-count span").html(result["count"]);
+    }
+
+    $("#next").click(function () {
+        // загрузите данные следующей страницы и поместите результат в тело таблицы, выполнив вызов ajax для следующего доступного URL-адреса
+        let url = $(this).attr("url");
+        if (!url)
+            $(this).prop('all', true);
+
+        $(this).prop('all', false);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    })
+
+    $("#previous").click(function () {
+        // загрузите данные предыдущей страницы и поместите результат в тело таблицы, выполнив ajax-вызов предыдущего доступного URL-адреса
+        let url = $(this).attr("url");
+        if (!url)
+            $(this).prop('all', true);
+
+        $(this).prop('all', false);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    })
+
+
+    function getAPIData() {
+        let url = $('#list_data').attr("url")
+        alert(url);
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: send_data,
+            beforeSend: function(){
+                $("#no_results h5").html("Загрузка данных...");
+            },
+            success: function (result) {
+                putTableData(result);
+            },
+            error: function (response) {
+                $("#no_results h5").html("Что-то пошло не так");
+                $("#list_data").hide();
+            }
+        });
+    }
+
+
+    function getMestorojdeniya() {
+        let url = $("#mestorojdeniya").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                mestorojdeniya_option = "<option value='all' selected>Все месторождения</option>";
+                $.each(result["mestorojdeniya"], function (a, b) {
+                    mestorojdeniya_option += "<option>" + b + "</option>"
+                });
+                $("#mestorojdeniya").html(mestorojdeniya_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getCompanies() {
+        // заполните параметры компаний, сделав вызов ajax, чтобы получить URL-адрес из компаний, выберите входной атрибут
+        let url = $("#companies").attr("url");
+
+        // делает запрос к методу getCompanies(request) в представлениях
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                companies_option = "<option value='all' selected>Все компании</option>";
+                $.each(result["companies"], function (a, b) {
+                    companies_option += "<option>" + b + "</option>"
+                });
+                $("#companies").html(companies_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getVidnidropolzovaniya() {
+        let url = $("#vidnidropolzovaniya").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                vidnidropolzovaniya_option = "<option value='all' selected>Все виды нидропользования</option>";
+                $.each(result["vidnidropolzovaniya"], function (a, b) {
+                    vidnidropolzovaniya_option += "<option>" + b + "</option>"
+                });
+                $("#vidnidropolzovaniya").html(vidnidropolzovaniya_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getOblasti() {
+        let url = $("#oblasti").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                oblasti_option = "<option value='all' selected>Все области</option>";
+                $.each(result["oblasti"], function (a, b) {
+                    oblasti_option += "<option>" + b + "</option>"
+                });
+                $("#oblasti").html(oblasti_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getRaiony() {
+        let url = $("#raiony").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                raiony_option = "<option value='all' selected>Все районы</option>";
+                $.each(result["raiony"], function (a, b) {
+                    raiony_option += "<option>" + b + "</option>"
+                });
+                $("#raiony").html(raiony_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+
+    function getStatusy() {
+        let url = $("#statusy").attr("url");
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: {},
+            success: function (result) {
+                statusy_option = "<option value='all' selected>Все статусы</option>";
+                $.each(result["statusy"], function (a, b) {
+                    statusy_option += "<option>" + b + "</option>"
+                });
+                $("#statusy").html(statusy_option)
+            },
+            error: function(response){
+                console.log(response)
+            }
+        });
+    }
+
+    function ClickLink(evt) {
+        alert('ClickLink');
+        var clickedLink = evt.target; // get the clicked anchor tag
+        var linkres = clickedLink.innerText;
+        document.cookie = "alink=" + linkres;
+        var l = "{% url 'karzav_cardv' %}";
+        location.href = l;
+    }
+</script>
+</html>

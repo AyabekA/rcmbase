@@ -1,0 +1,96 @@
+{% load socialaccount %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/authorization.css' %}">
+    <title>Login</title>
+</head>
+<body>
+    {% if request.user.role is not None %}
+        <script>
+            window.location.href = "{% url 'polls:profile' %}"
+        </script>
+    {% endif %}
+    <div class="body-auth">
+        <div class="content-auth fadeInDown">
+            <div class="h-auth fadeIn first">
+                <h2>Добро пожаловать!</h2>
+                <div class="h-auth-line">
+                    <div class="" style="background-color: #424B5A; border-radius: 60px; height: 5px; width: 35px"></div>
+                    <div style="background-color: #424B5A; border-radius: 60px; height: 5px; width: 15px; margin-left: 5px"></div>
+                </div>
+            </div>
+            <div class="form-auth fadeIn second">
+                <div id="result_msg" style="color: darkred">
+                    {% if form.errors %}
+                            {% for field_errors in form.errors.values %}
+                                {% for error in field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                    {% endif %}
+                </div>
+                <form action="{% url 'polls:login_user' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-auth-line fadeIn third">
+                        <input class="input-auth" type="email" name="{{ form.email.name }}" placeholder="Электронная почта">
+                        <div class="password-block-auth">
+                          <input type="password" id="password-field" name="{{ form.password.name }}" placeholder="Пароль">
+                          <button class="button-password-auth" type="button" id="toggle-password-visibility">
+                            <svg id="hide-icon" fill="#424B5A" width="16" height="16" viewBox="0 0 512 512">
+                                <path d="M409.84,132.33l95.91-95.91A21.33,21.33,0,1,0,475.58,6.25L6.25,475.58a21.33,21.33,0,1,0,30.17,30.17L140.77,401.4A275.84,275.84,0,0,0,256,426.67c107.6,0,204.85-61.78,253.81-161.25a21.33,21.33,0,0,0,0-18.83A291,291,0,0,0,409.84,132.33ZM256,362.67a105.78,105.78,0,0,1-58.7-17.8l31.21-31.21A63.29,63.29,0,0,0,256,320a64.07,64.07,0,0,0,64-64,63.28,63.28,0,0,0-6.34-27.49l31.21-31.21A106.45,106.45,0,0,1,256,362.67ZM2.19,265.42a21.33,21.33,0,0,1,0-18.83C51.15,147.11,148.4,85.33,256,85.33a277,277,0,0,1,70.4,9.22l-55.88,55.88A105.9,105.9,0,0,0,150.44,270.52L67.88,353.08A295.2,295.2,0,0,1,2.19,265.42Z"/>
+                            </svg>
+                            <svg id="show-icon" fill="#424B5A" width="16" height="16" viewBox="0 0 512 512">
+                                <path d="M320,256a64,64,0,1,1-64-64A64.07,64.07,0,0,1,320,256Zm189.81,9.42C460.86,364.89,363.6,426.67,256,426.67S51.14,364.89,2.19,265.42a21.33,21.33,0,0,1,0-18.83C51.14,147.11,148.4,85.33,256,85.33s204.86,61.78,253.81,161.25A21.33,21.33,0,0,1,509.81,265.42ZM362.67,256A106.67,106.67,0,1,0,256,362.67,106.79,106.79,0,0,0,362.67,256Z"/>
+                            </svg>
+                          </button>
+                        </div>
+                    </div>
+                    <div class="input-auth-line fadeIn third line-btm">
+                        <button type="submit" id="login" class="button-auth fadeIn third" value="Log In">Войти в мой кабинет</button>
+                        <div class="a-block-auth">
+                            <a class="a-reg-auth" href="{% url 'polls:register' %}">
+                                <svg fill="#424B5A" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M18 10v-4c0-3.313-2.687-6-6-6s-6 2.687-6 6v4h-3v14h18v-14h-3zm-5 7.723v2.277h-2v-2.277c-.595-.347-1-.984-1-1.723 0-1.104.896-2 2-2s2 .896 2 2c0 .738-.404 1.376-1 1.723zm-5-7.723v-4c0-2.206 1.794-4 4-4 2.205 0 4 1.794 4 4v4h-8z"/>
+                                </svg>
+                                Зарегистрироваться
+                            </a>
+                        </div>
+                    </div>
+                    <a class="a-reg-auth fadeIn third" href="{% provider_login_url 'google'%}?next=/authorization/complete_registration">Зайти с помощью Google</a>
+                </form>
+            </div>
+            <div class="footer-auth fadeIn fourth">
+                <div style="display: flex; align-items: center;">
+                    <div class="question-mark-icon">?</div>
+                    <a class="a-auth" href="{% url 'polls:password_reset' %}">Забыли пароль? Восстановить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+  const passwordField = document.getElementById("password-field");
+  const toggleButton = document.getElementById("toggle-password-visibility");
+  const hideIcon = document.getElementById("hide-icon");
+  const showIcon = document.getElementById("show-icon");
+  hideIcon.style.display = "block";
+  showIcon.style.display = "none";
+
+  toggleButton.addEventListener("click", function () {
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      hideIcon.style.display = "none";
+      showIcon.style.display = "block";
+    } else {
+      passwordField.type = "password";
+      hideIcon.style.display = "block";
+      showIcon.style.display = "none";
+    }
+  });
+</script>
+</html>

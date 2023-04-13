@@ -1,0 +1,13 @@
+{% if verification_failed %}
+  <p>Verification failed. Please try again.</p>
+{% endif %}
+
+{% if verification_successful %}
+  <p>Thank you for verifying your email address!</p>
+{% endif %}
+
+{% if not verification_successful and not verification_failed %}
+  <p>Привет {{ user.first_name }},</p>
+  <p>Спасибо за регистрацию на нашем сайте. Пожалуйста, нажмите на следующую ссылку, чтобы подтвердить свой адрес электронной почты:</p>
+  <a href="{{ verification_link }}">{{ verification_link }}</a>
+{% endif %}

@@ -1,0 +1,86 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/authorization.css' %}">
+    <title>Удаление Карьера и Завода</title>
+</head>
+<body>
+{% if request.user.role.id is not 4 %}
+    <script>
+        window.location.href = "{% url 'polls:profile' %}"
+    </script>
+{% endif %}
+
+<div class="body-auth">
+    <div class="content-auth-text fadeInDown">
+        <div class="h-auth fadeIn first">
+            <h2 class="active"> Удаление Карьера и Завода </h2>
+            <div class="h-auth-line">
+                <div class="" style="background-color: #424B5A; border-radius: 60px; height: 5px; width: 35px"></div>
+                <div style="background-color: #424B5A; border-radius: 60px; height: 5px; width: 15px; margin-left: 5px"></div>
+            </div>
+        </div>
+
+        <div class="form-auth fadeIn second">
+            <div id="result_msg" style="color: darkred">
+                {% if error %}
+                    <p>{{ error }}</p>
+                {% endif %}
+            </div>
+
+            <form method="POST">
+
+              {% csrf_token %}
+              <div class="input-auth-line-text fadeIn Third line-btm">
+                  <input class="input-auth duo" type="text" id="nedrouser" name="nedrouser" placeholder="Недропользователь" required>
+                  <button type="submit" style="border-radius: 15px; margin-top: 2vh" id="login" class="button-auth fadeIn fourth">Удалить</button>
+              </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+  const passwordField1 = document.getElementById("password-field1");
+  const toggleButton1 = document.getElementById("toggle-password-visibility1");
+  const hideIcon1 = document.getElementById("hide-icon1");
+  const showIcon1 = document.getElementById("show-icon1");
+  hideIcon1.style.display = "block";
+  showIcon1.style.display = "none";
+
+  toggleButton1.addEventListener("click", function () {
+    if (passwordField1.type === "password") {
+      passwordField1.type = "text";
+      hideIcon1.style.display = "none";
+      showIcon1.style.display = "block";
+    } else {
+      passwordField1.type = "password";
+      hideIcon1.style.display = "block";
+      showIcon1.style.display = "none";
+    }
+  });
+
+  const passwordField2 = document.getElementById("password-field2");
+  const toggleButton2 = document.getElementById("toggle-password-visibility2");
+  const hideIcon2 = document.getElementById("hide-icon2");
+  const showIcon2 = document.getElementById("show-icon2");
+  hideIcon2.style.display = "block";
+  showIcon2.style.display = "none";
+
+  toggleButton2.addEventListener("click", function () {
+    if (passwordField2.type === "password") {
+      passwordField2.type = "text";
+      hideIcon2.style.display = "none";
+      showIcon2.style.display = "block";
+    } else {
+      passwordField2.type = "password";
+      hideIcon2.style.display = "block";
+      showIcon2.style.display = "none";
+    }
+  });
+</script>
+</html>
